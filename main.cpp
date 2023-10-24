@@ -12,64 +12,51 @@ struct LOG {
     int **board;
 };
 
-void make_board(int board[][N])
+struct INPUT_DATA input_key(Board *match)
 {
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) {
-            if(i == 0 || j == 0 || i == 9 || j == 9) {
-                board[i][j] = 2;
-                continue;
-            } else {
-                board[i][j] = 0;
-            }
-        }
-    }
-    board[4][4] = board[5][5] = 1;
-    board[4][5] = board[5][4] = -1;
-}
-
-void print_board(int board[][N])
-{
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) {
-            switch(board[i][j]) {
-                case 0:
-                    printf("--"); break;
-                case 1:
-                    printf("●"); break;
-                case -1:
-                    printf("★"); break;
-                case 2:
-                    printf("■");
-                default:
-                    ;
-            }
-        }
-        printf("\n");
-    }
-}
-
-int check_finish(int t, int board[][N])
-{
-    return 0;
-}
-
-int check_pass(int k, int board[][N])
-{
-    return 0;
-}
-
-struct INPUT_DATA input_key(int k, int board[][N])
-{
-    int x, y;
     struct INPUT_DATA data;
 
-    cout << "手を打つ場所を決めてください:" << endl;
-    cout << "x:"; cin >> x;
-    cout << "y:"; cin >> y; 
+    struct INPUT_DATA cur = match->cur;
 
-    data.x = x;
-    data.y = y;
+    char c;
+    bool is_decide = false;
+    while(!is_decide) {
+        c = getc(stdin);
+        switch(c) {
+            case 'w':
+                cur.y--;
+                break;
+            case 's':
+                cur.y++;
+                break;
+            case 'a':
+                cur.x--;
+                break;
+            case 'd':
+                cur.x++;
+                break;
+
+            case '\n':
+                is_decide = true;
+                break;
+        }
+        if(cur.x > N - 2)
+            cur.x = N - 2;
+        if(cur.x < 1)
+            cur.x = 1;
+        if(cur.y > N - 2)
+            cur.y = N - 2;
+        if(cur.y < 1)
+            cur.y = 1;
+        match->cur = cur;
+
+        system("clear"); // windows環境ならsystem("cls");
+        match->print_board();
+
+    }
+
+    data.x = cur.x;
+    data.y = cur.y;
 
     return data;
 
@@ -82,23 +69,16 @@ void change_board(int k, int x, int y, int board[][N])
 
 int main(void)
 {
-    int board[N][N] = { 0 };
-    int k;
-    struct INPUT_DATA input_data;
-
     Board match;
+    INPUT_DATA data;
+    INPUT_DATA cur = {0, 0};
+
     match.print_board();
 
-    k = 1;
-    match.k = k;
-    while (match.check_finish() != 0) {
-        match.k = k;
+    while(match.check_finish() != 0) {
         match.turn++;
-        if (match.check_pass() != 0) {
-            input_data = input_key(k, board);
-            match.change_board(input_data);
-            match.print_board();
+        if(match.check_pass() != 0) {
+            data = input_key(&match);
         }
-        k = k * -1;
     }
 }

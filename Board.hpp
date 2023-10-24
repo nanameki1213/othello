@@ -12,6 +12,7 @@ public:
     int **board;
     int turn;
     int k;
+    struct INPUT_DATA cur;
 
     Board();
 

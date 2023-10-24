@@ -3,6 +3,9 @@ using namespace std;
 
 Board::Board()
 {
+    cur.x = 1;
+    cur.y = 1;
+
     board = new int*[N];
     for(int i = 0; i < N; i++) {
         board[i] = new int[N];
@@ -28,6 +31,10 @@ void Board::print_board()
 {
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
+            if(cur.x == j && cur.y == i) {
+                cout << "◎";
+                continue;
+            }
             switch(board[i][j]) {
                 case 0:
                     cout << "--"; break;
@@ -37,6 +44,7 @@ void Board::print_board()
                     cout << "★"; break;
                 case 2:
                     cout << "■";
+                    break;
                 default:
                     ;
             }
