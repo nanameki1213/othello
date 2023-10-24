@@ -64,9 +64,9 @@ struct INPUT_DATA input_key(int k, int board[][N])
     int x, y;
     struct INPUT_DATA data;
 
-    printf("手を打つ場所を決めてください:\n");
-    printf("x:"); scanf("%d", &x);
-    printf("y:"); scanf("%d", &y);
+    cout << "手を打つ場所を決めてください:" << endl;
+    cout << "x:"; cin >> x;
+    cout << "y:"; cin >> y; 
 
     data.x = x;
     data.y = y;

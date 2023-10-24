@@ -1,4 +1,5 @@
 #include "Board.hpp"
+using namespace std;
 
 Board::Board()
 {
@@ -29,29 +30,29 @@ void Board::print_board()
         for(int j = 0; j < N; j++) {
             switch(board[i][j]) {
                 case 0:
-                    printf("--"); break;
+                    cout << "--"; break;
                 case 1:
-                    printf("●"); break;
+                    cout << "●"; break;
                 case -1:
-                    printf("★"); break;
+                    cout << "★"; break;
                 case 2:
-                    printf("■");
+                    cout << "■";
                 default:
                     ;
             }
         }
-        printf("\n");
+        cout << endl;
     }
 }
 
 int Board::check_finish()
 {
-    return 0;
+    return 1;
 }
 
 int Board::check_pass()
 {
-    return 0;
+    return 1;
 }
 
 void Board::change_board(INPUT_DATA data)
