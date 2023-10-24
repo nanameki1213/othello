@@ -1,11 +1,8 @@
-#include <stdio.h>
-#include <stdbool.h>
-#define N 10
-#define T 100
+#include <iostream>
+#include "Board.hpp"
 
-struct INPUT_DATA {
-    int x, y;
-};
+using namespace std;
+#define T 100
 
 typedef struct LOG LOG;
 
@@ -86,21 +83,21 @@ void change_board(int k, int x, int y, int board[][N])
 int main(void)
 {
     int board[N][N] = { 0 };
-    int t;
     int k;
     struct INPUT_DATA input_data;
 
-    make_board(board);
-    print_board(board);
+    Board match;
+    match.print_board();
 
-    t = 0;
     k = 1;
-    while (check_finish(t, board) != 0) {
-        t++;
-        if (check_pass(k, board) != 0) {
+    match.k = k;
+    while (match.check_finish() != 0) {
+        match.k = k;
+        match.turn++;
+        if (match.check_pass() != 0) {
             input_data = input_key(k, board);
-            change_board(k, input_data.x, input_data.y, board);
-            print_board(board);
+            match.change_board(input_data);
+            match.print_board();
         }
         k = k * -1;
     }
