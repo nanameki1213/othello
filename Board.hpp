@@ -2,6 +2,10 @@
 
 #include <iostream>
 #define N 10
+#define NONE 0
+#define WHITE 1
+#define BLACK -1
+#define OUT_OF_RANGE 2
 
 struct INPUT_DATA {
     int x, y;
