@@ -43,7 +43,9 @@ void print_board(int board[][N])
                 case -1:
                     printf("★"); break;
                 case 2:
+                    printf("■");
                 default:
+                    ;
             }
         }
         printf("\n");
