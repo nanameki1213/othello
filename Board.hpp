@@ -19,6 +19,7 @@ public:
 
     Board();
 
+    bool can_put(int x, int y);
     void print_board();
     int check_finish();
     int check_pass();
