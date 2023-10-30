@@ -81,7 +81,8 @@ int main(void)
 
     k = 1;
     match.k = k;
-    while (match.check_finish() != 0) {
+    for(int i = 0; i < 10; i++) {
+    // while (match.check_finish() != 0) {
 
         // boardに変更を加える前にログをとる
         Board tmp = Board(match);
@@ -98,6 +99,7 @@ int main(void)
     }
 
     for(auto itr = log.begin(); itr != log.end(); itr++) {
+        cout << "turn: " << itr - log.begin() << endl;
         (*itr).print_board();
     }
 
