@@ -18,6 +18,7 @@ public:
     int k;
 
     Board();
+    Board(const Board &b);
 
     bool can_put(int x, int y);
     void print_board();

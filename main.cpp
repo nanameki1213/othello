@@ -1,16 +1,12 @@
 #include <iostream>
 #include "Board.hpp"
+#include <string.h>
+#include <vector>
 
 using namespace std;
 #define T 100
 
 typedef struct LOG LOG;
-
-struct LOG {
-    LOG *next;
-    LOG *prev;
-    int **board;
-};
 
 void make_board(int board[][N])
 {
@@ -49,16 +45,6 @@ void print_board(int board[][N])
     }
 }
 
-int check_finish(int t, int board[][N])
-{
-    return 0;
-}
-
-int check_pass(int k, int board[][N])
-{
-    return 0;
-}
-
 struct INPUT_DATA input_key(int k, int board[][N])
 {
     int x, y;
@@ -70,6 +56,8 @@ struct INPUT_DATA input_key(int k, int board[][N])
 
     data.x = x;
     data.y = y;
+
+
 
     return data;
 
@@ -89,9 +77,16 @@ int main(void)
     Board match;
     match.print_board();
 
+    vector<Board> log;
+
     k = 1;
     match.k = k;
     while (match.check_finish() != 0) {
+
+        // boardに変更を加える前にログをとる
+        Board tmp = Board(match);
+        log.push_back(tmp);
+
         match.k = k;
         match.turn++;
         if (match.check_pass() != 0) {
@@ -101,4 +96,10 @@ int main(void)
         }
         k = k * -1;
     }
+
+    for(auto itr = log.begin(); itr != log.end(); itr++) {
+        (*itr).print_board();
+    }
+
+    return 0;
 }

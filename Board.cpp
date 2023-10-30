@@ -1,4 +1,5 @@
 #include "Board.hpp"
+#include <string.h>
 using namespace std;
 
 Board::Board()
@@ -24,6 +25,18 @@ Board::Board()
     turn = 0;
 }
 
+Board::Board(const Board &b)
+{
+    board = new int*[N];
+    for(int i = 0; i < N; i++) {
+        board[i] = new int[N];
+    }
+    memcpy(board, b.board, N * N);
+
+    turn = b.turn;
+    k = b.k;
+}
+
 void Board::print_board()
 {
     for(int i = 0; i < N; i++) {
@@ -34,7 +47,7 @@ void Board::print_board()
                 case WHITE:
                     cout << "●"; break;
                 case BLACK:
-                    cout << "★"; break;
+                    cout << "〇"; break;
                 case OUT_OF_RANGE:
                     cout << "■";
                 default:
