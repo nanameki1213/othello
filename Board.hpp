@@ -32,8 +32,9 @@ public:
 
     bool can_put(int x, int y);
     bool check_change(int x, int y, int direc);
+    void change_in_row(int x, int y, int direc);
     void print_board();
     int check_finish();
     int check_pass();
-    void change_board(INPUT_DATA data);
+    void change_board(int x, int y);
 };
