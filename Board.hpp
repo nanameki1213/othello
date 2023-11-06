@@ -29,6 +29,7 @@ public:
     int k;
 
     Board();
+    Board(const Board &b);
 
     bool can_put(int x, int y);
     bool check_change(int x, int y, int direc);

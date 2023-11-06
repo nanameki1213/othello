@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Board.hpp"
+#include <string.h>
+#include <vector>
 
 using namespace std;
 #define T 100
@@ -36,6 +38,8 @@ struct INPUT_DATA input_key(Board *match)
     data.x = x;
     data.y = y;
 
+
+
     return data;
 
 }
@@ -47,17 +51,31 @@ int main(void)
 
     Board match;
 
+    vector<Board> log;
+
     k = 1;
     match.k = k;
-    while (match.check_finish() != 0) {
+    for(int i = 0; i < 3; i++) {
+    // while (match.check_finish() != 0) {
+
+        // boardに変更を加える前にログをとる
+        Board tmp = Board(match);
+        log.push_back(tmp);
+
         match.print_board();
-        match.k = k;
-        match.turn++;
+
         if (match.check_pass() != 0) {
             input_data = input_key(&match);
             match.change_board(input_data.x, input_data.y);
         }
-        k = k * -1;
+        
+        match.k *= -1;
+        match.turn++;
+    }
+
+    for(auto itr = log.begin(); itr != log.end(); itr++) {
+        cout << "turn: " << itr - log.begin() << endl;
+        (*itr).print_board();
     }
 
     return 0;

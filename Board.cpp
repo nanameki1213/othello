@@ -1,5 +1,6 @@
 #include "Board.hpp"
 #include <math.h>
+#include <string.h>
 using namespace std;
 
 #define PI 3.14
@@ -27,18 +28,30 @@ Board::Board()
     turn = 0;
 }
 
+Board::Board(const Board &b)
+{
+    board = new int*[N];
+    for(int i = 0; i < N; i++) {
+        board[i] = new int[N];
+    }
+    memcpy(board, b.board, N * N);
+
+    turn = b.turn;
+    k = b.k;
+}
+
 void Board::print_board()
 {
-    printf("\n現在のターンは%sです\n\n", k == BLACK ? "★" : "●");
+    printf("\n現在のターンは%sです\n\n", k == BLACK ? "〇" : "●");
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             switch(board[i][j]) {
                 case NONE:
-                    cout << "--"; break;
+                    cout << "□"; break;
                 case WHITE:
                     cout << "●"; break;
                 case BLACK:
-                    cout << "★"; break;
+                    cout << "〇"; break;
                 case OUT_OF_RANGE:
                     cout << "■";
                 default:
@@ -84,7 +97,7 @@ void Board::change_in_row(int x, int y, int direc)
     if(board[my][mx] == OUT_OF_RANGE) {
         return;
     }
-    printf("mx:%d, my:%d\n", mx, my);
+    // printf("mx:%d, my:%d\n", mx, my);
 
     while(board[my][mx] == opp) {
         check = true;
@@ -95,7 +108,7 @@ void Board::change_in_row(int x, int y, int direc)
         if(board[my][mx] == OUT_OF_RANGE)
             return;
 
-        printf("mx:%d, my:%d\n", mx, my);
+        // printf("mx:%d, my:%d\n", mx, my);
     }
 
     if(board[my][mx] != k || !check) {
@@ -140,7 +153,7 @@ bool Board::check_change(int x, int y, int direc)
     if(board[my][mx] == OUT_OF_RANGE) {
         return false;
     }
-    printf("mx:%d, my:%d\n", mx, my);
+    // printf("mx:%d, my:%d\n", mx, my);
 
     while(board[my][mx] == opp) {
         check = true;
@@ -151,7 +164,7 @@ bool Board::check_change(int x, int y, int direc)
         if(board[my][mx] == OUT_OF_RANGE)
             return false;
 
-        printf("mx:%d, my:%d\n", mx, my);
+        // printf("mx:%d, my:%d\n", mx, my);
     }
 
     if(board[my][mx] == k && check) {

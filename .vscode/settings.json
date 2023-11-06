@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "iostream": "cpp",
+<<<<<<< HEAD
         "cmath": "cpp"
+=======
+        "vector": "cpp"
+>>>>>>> feature/store
     }
 }
