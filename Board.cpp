@@ -29,6 +29,7 @@ Board::Board()
 
 void Board::print_board()
 {
+    printf("\n現在のターンは%sです\n\n", k == BLACK ? "★" : "●");
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             switch(board[i][j]) {
@@ -81,21 +82,28 @@ bool Board::can_put(int x, int y)
 bool Board::check_change(int x, int y, int direc)
 {
     int opp = k * -1;
-    int mx = x, my = y;
+    int mx, my;
     bool check = false;
 
     mx = x + round(cos(PI/4 * direc));
     my = y + round(sin(PI/4 * direc));
 
+    if(board[my][mx] == OUT_OF_RANGE) {
+        return false;
+    }
+    printf("mx:%d, my:%d\n", mx, my);
+
     while(board[my][mx] == opp) {
         check = true;
 
-        mx = x + round(cos(PI/4 * direc));
-        my = y + round(sin(PI/4 * direc));
-    }
+        mx += round(cos(PI/4 * direc));
+        my += round(sin(PI/4 * direc));
 
-    mx = x + round(cos(PI/4 * direc));
-    my = y + round(sin(PI/4 * direc));
+        if(board[my][mx] == OUT_OF_RANGE)
+            return false;
+
+        printf("mx:%d, my:%d\n", mx, my);
+    }
 
     if(board[my][mx] == k && check) {
         return true;
