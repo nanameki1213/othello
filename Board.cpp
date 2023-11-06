@@ -62,55 +62,6 @@ int Board::check_pass()
 void Board::change_board(int x, int y)
 {
     board[y][x] = k;
-
-    int mx, my;
-
-    int opp = k * -1;
-
-    for(int i = 0; i < N -2; i++) {
-        change_in_row(x, y, i);
-    }
-}
-
-void Board::change_in_row(int x, int y, int direc)
-{
-    int opp = k * -1;
-    int mx, my;
-    bool check = false;
-
-    mx = x + round(cos(PI/4 * direc));
-    my = y + round(sin(PI/4 * direc));
-
-    if(board[my][mx] == OUT_OF_RANGE) {
-        return;
-    }
-    printf("mx:%d, my:%d\n", mx, my);
-
-    while(board[my][mx] == opp) {
-        check = true;
-
-        mx += round(cos(PI/4 * direc));
-        my += round(sin(PI/4 * direc));
-
-        if(board[my][mx] == OUT_OF_RANGE)
-            return;
-
-        printf("mx:%d, my:%d\n", mx, my);
-    }
-
-    if(board[my][mx] != k || !check) {
-        return;    
-    }
-
-    mx = x + round(cos(PI/4 * direc));
-    my = y + round(sin(PI/4 * direc));
-
-    while(board[my][mx] == opp) {
-        board[my][mx] = k;
-        
-        mx += round(cos(PI/4 * direc));
-        my += round(sin(PI/4 * direc));
-    }
 }
 
 bool Board::can_put(int x, int y)
@@ -140,7 +91,7 @@ bool Board::check_change(int x, int y, int direc)
     if(board[my][mx] == OUT_OF_RANGE) {
         return false;
     }
-    printf("mx:%d, my:%d\n", mx, my);
+    // printf("mx:%d, my:%d\n", mx, my);
 
     while(board[my][mx] == opp) {
         check = true;
@@ -151,7 +102,7 @@ bool Board::check_change(int x, int y, int direc)
         if(board[my][mx] == OUT_OF_RANGE)
             return false;
 
-        printf("mx:%d, my:%d\n", mx, my);
+        // printf("mx:%d, my:%d\n", mx, my);
     }
 
     if(board[my][mx] == k && check) {
