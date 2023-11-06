@@ -1,5 +1,8 @@
 #include "Board.hpp"
+#include <math.h>
 using namespace std;
+
+#define PI 3.14
 
 Board::Board()
 {
@@ -58,4 +61,45 @@ int Board::check_pass()
 void Board::change_board(INPUT_DATA data)
 {
 
+}
+
+bool Board::can_put(int x, int y)
+{
+    // 配置するマスに何も置かれていないことの確認
+    if(board[y][x] != NONE)
+        return false;
+
+    for(int i = 0; i < 8; i++) { 
+        if(check_change(x, y, i)) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool Board::check_change(int x, int y, int direc)
+{
+    int opp = k * -1;
+    int mx = x, my = y;
+    bool check = false;
+
+    mx = x + round(cos(PI/4 * direc));
+    my = y + round(sin(PI/4 * direc));
+
+    while(board[my][mx] == opp) {
+        check = true;
+
+        mx = x + round(cos(PI/4 * direc));
+        my = y + round(sin(PI/4 * direc));
+    }
+
+    mx = x + round(cos(PI/4 * direc));
+    my = y + round(sin(PI/4 * direc));
+
+    if(board[my][mx] == k && check) {
+        return true;
+    }
+
+    return false;
 }

@@ -11,6 +11,17 @@ struct INPUT_DATA {
     int x, y;
 };
 
+enum {
+    RIGHT = 0,
+    RIGHT_UP,
+    UP,
+    LEFT_UP,
+    LEFT,
+    LEFT_DOWN,
+    DOWN,
+    RIGHT_DOWN,
+};
+
 class Board {
 public:
     int **board;
@@ -20,6 +31,7 @@ public:
     Board();
 
     bool can_put(int x, int y);
+    bool check_change(int x, int y, int direc)
     void print_board();
     int check_finish();
     int check_pass();
