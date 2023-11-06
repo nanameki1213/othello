@@ -19,19 +19,9 @@ struct INPUT_DATA input_key(Board *match)
     int x, y;
     struct INPUT_DATA data;
 
-    do {
-
-        cout << "手を打つ場所を決めてください:" << endl;
-        cout << "x:"; cin >> x;
-        cout << "y:"; cin >> y;
-
-        if(match->can_put(x, y)) {
-            break;
-        } else {
-            printf("その場所にはおけません\n");
-        }
-
-    } while(1);
+    cout << "手を打つ場所を決めてください:" << endl;
+    cout << "x:"; cin >> x;
+    cout << "y:"; cin >> y;
 
     data.x = x;
     data.y = y;
@@ -48,16 +38,17 @@ int main(void)
     Board match;
 
     k = 1;
-    match.k = k;
     while (match.check_finish() != 0) {
         match.print_board();
         match.k = k;
         match.turn++;
         if (match.check_pass() != 0) {
             input_data = input_key(&match);
-            match.change_board(input_data.x, input_data.y);
+
+            if(match.can_put(input_data.x, input_data.y))
+                match.board[input_data.y][input_data.x] = k;
         }
-        k = k * -1;
+        match.k *= -1;
     }
 
     return 0;

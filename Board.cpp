@@ -140,7 +140,7 @@ bool Board::check_change(int x, int y, int direc)
     if(board[my][mx] == OUT_OF_RANGE) {
         return false;
     }
-    printf("mx:%d, my:%d\n", mx, my);
+    // printf("mx:%d, my:%d\n", mx, my);
 
     while(board[my][mx] == opp) {
         check = true;
@@ -151,7 +151,7 @@ bool Board::check_change(int x, int y, int direc)
         if(board[my][mx] == OUT_OF_RANGE)
             return false;
 
-        printf("mx:%d, my:%d\n", mx, my);
+        // printf("mx:%d, my:%d\n", mx, my);
     }
 
     if(board[my][mx] == k && check) {
