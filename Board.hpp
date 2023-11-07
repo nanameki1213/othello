@@ -27,6 +27,7 @@ public:
     int **board;
     int turn;
     int k;
+    struct INPUT_DATA cur;
 
     Board();
     Board(const Board &b);

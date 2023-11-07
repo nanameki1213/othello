@@ -1,44 +1,79 @@
 #include <iostream>
 #include "Board.hpp"
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <string.h>
 #include <vector>
 
 using namespace std;
 #define T 100
 
-int check_finish(int t, int board[][N])
-{
-    return 0;
-}
+typedef struct LOG LOG;
 
-int check_pass(int k, int board[][N])
+struct LOG {
+    LOG *next;
+    LOG *prev;
+    int **board;
+};
+
+int getch(void)
 {
-    return 0;
+	struct termios oldattr, newattr;
+	int ch;
+	tcgetattr(STDIN_FILENO, &oldattr);
+	newattr = oldattr;
+	newattr.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+	return ch;
 }
 
 struct INPUT_DATA input_key(Board *match)
 {
-    int x, y;
     struct INPUT_DATA data;
 
-    do {
+    struct INPUT_DATA cur = match->cur;
 
-        cout << "手を打つ場所を決めてください:" << endl;
-        cout << "x:"; cin >> x;
-        cout << "y:"; cin >> y;
+    char c;
+    bool is_decide = false;
+    while(!is_decide) {
+        switch(getch()) {
+            case 'w':
+                cur.y--;
+                break;
+            case 's':
+                cur.y++;
+                break;
+            case 'a':
+                cur.x--;
+                break;
+            case 'd':
+                cur.x++;
+                break;
 
-        if(match->can_put(x, y)) {
-            break;
-        } else {
-            printf("その場所にはおけません\n");
+            case '\n':
+                is_decide = true;
+                break;
         }
+        if(cur.x > N - 2)
+            cur.x = N - 2;
+        if(cur.x < 1)
+            cur.x = 1;
+        if(cur.y > N - 2)
+            cur.y = N - 2;
+        if(cur.y < 1)
+            cur.y = 1;
+        match->cur = cur;
 
-    } while(1);
+        system("clear"); // windows環境ならsystem("cls");
+        match->print_board();
 
-    data.x = x;
-    data.y = y;
+    }
 
-
+    data.x = cur.x;
+    data.y = cur.y;
 
     return data;
 
@@ -56,6 +91,7 @@ int main(void)
     k = 1;
     match.k = k;
     for(int i = 0; i < 3; i++) {
+        system("clear");
     // while (match.check_finish() != 0) {
 
         // boardに変更を加える前にログをとる
