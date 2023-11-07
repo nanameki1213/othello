@@ -36,41 +36,48 @@ struct INPUT_DATA input_key(Board *match)
 
     struct INPUT_DATA cur = match->cur;
 
-    char c;
-    bool is_decide = false;
-    while(!is_decide) {
-        switch(getch()) {
-            case 'w':
-                cur.y--;
-                break;
-            case 's':
-                cur.y++;
-                break;
-            case 'a':
-                cur.x--;
-                break;
-            case 'd':
-                cur.x++;
-                break;
+    do {
+        bool is_decide = false;
+        while(!is_decide) {
+            switch(getch()) {
+                case 'w':
+                    cur.y--;
+                    break;
+                case 's':
+                    cur.y++;
+                    break;
+                case 'a':
+                    cur.x--;
+                    break;
+                case 'd':
+                    cur.x++;
+                    break;
 
-            case '\n':
-                is_decide = true;
-                break;
+                case '\n':
+                    is_decide = true;
+                    break;
+            }
+            if(cur.x > N - 2)
+                cur.x = N - 2;
+            if(cur.x < 1)
+                cur.x = 1;
+            if(cur.y > N - 2)
+                cur.y = N - 2;
+            if(cur.y < 1)
+                cur.y = 1;
+            match->cur = cur;
+
+            system("clear"); // windows環境ならsystem("cls");
+            match->print_board();
+
         }
-        if(cur.x > N - 2)
-            cur.x = N - 2;
-        if(cur.x < 1)
-            cur.x = 1;
-        if(cur.y > N - 2)
-            cur.y = N - 2;
-        if(cur.y < 1)
-            cur.y = 1;
-        match->cur = cur;
 
-        system("clear"); // windows環境ならsystem("cls");
-        match->print_board();
-
-    }
+        if(match->can_put(cur.x, cur.y)) {
+            break;
+        } else {
+            cout << "(" << cur.x << "," << cur.y << ")には置けません\n";
+        }
+    }while(1);
 
     data.x = cur.x;
     data.y = cur.y;
@@ -85,7 +92,6 @@ int main(void)
     struct INPUT_DATA input_data;
 
     Board match;
-
     vector<Board> log;
 
     k = 1;
@@ -95,8 +101,10 @@ int main(void)
     // while (match.check_finish() != 0) {
 
         // boardに変更を加える前にログをとる
-        Board tmp = Board(match);
-        log.push_back(tmp);
+        printf("matchのアドレス: %p\n", match.board);
+        log.push_back(match);
+        cout << "loged\n";
+        log[i].print_board();
 
         match.print_board();
 
@@ -104,14 +112,18 @@ int main(void)
             input_data = input_key(&match);
             match.change_board(input_data.x, input_data.y);
         }
-        
         match.k *= -1;
         match.turn++;
     }
 
-    for(auto itr = log.begin(); itr != log.end(); itr++) {
-        cout << "turn: " << itr - log.begin() << endl;
-        (*itr).print_board();
+    // for(int i = 0; i < N; i++) {
+    //     delete match.board[i];
+    // }
+    // delete match.board;
+
+    for(int i = 0; i < 3; i++) {
+        log[i].print_board();
+        printf("addr: %p\n", log[i].board);
     }
 
     return 0;

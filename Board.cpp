@@ -33,12 +33,21 @@ Board::Board()
 
 Board::Board(const Board &b)
 {
-    board = new int*[N];
+    board = new int*[N]();
     for(int i = 0; i < N; i++) {
-        board[i] = new int[N];
+        board[i] = new int[N]();
     }
-    memcpy(board, b.board, N * N);
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            board[i][j] = b.board[i][j];
+        }
+    }
+    cout << "コピーコンストラクタ\n";
+    printf("コピー元のアドレス: %p\n", b.board);
+    printf("コピー先のアドレス: %p\n", board);
 
+    cur.x = b.cur.x;
+    cur.y = b.cur.y;
     turn = b.turn;
     k = b.k;
 }
