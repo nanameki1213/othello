@@ -9,6 +9,10 @@
 using namespace std;
 #define T 100
 
+#define KEY_INPUT 0
+#define KEY_WAIT 1
+#define KEY_BACK 2
+
 typedef struct LOG LOG;
 
 struct LOG {
@@ -30,9 +34,9 @@ int getch(void)
 	return ch;
 }
 
-struct INPUT_DATA input_key(Board *match)
+// キーボードからの入力を受け取り、対応するラベルを返却する
+int input_key(Board *match, struct INPUT_DATA &data)
 {
-    struct INPUT_DATA data;
 
     struct INPUT_DATA cur = match->cur;
 
@@ -52,6 +56,10 @@ struct INPUT_DATA input_key(Board *match)
                 case 'd':
                     cur.x++;
                     break;
+                case 'b':
+                    return KEY_WAIT;
+                case 't':
+                    return KEY_BACK;
 
                 case '\n':
                     is_decide = true;
@@ -69,8 +77,10 @@ struct INPUT_DATA input_key(Board *match)
 
             system("clear"); // windows環境ならsystem("cls");
             match->print_board();
+            cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n";
 
         }
+
 
         if(match->can_put(cur.x, cur.y)) {
             break;
@@ -82,8 +92,7 @@ struct INPUT_DATA input_key(Board *match)
     data.x = cur.x;
     data.y = cur.y;
 
-    return data;
-
+    return KEY_INPUT;
 }
 
 int main(void)
@@ -96,34 +105,38 @@ int main(void)
 
     k = 1;
     match.k = k;
-    for(int i = 0; i < 3; i++) {
-        system("clear");
+    bool is_wait = false;
+
+    for(int i = 0; i < 100; i++) {
     // while (match.check_finish() != 0) {
+        system("clear");
 
         // boardに変更を加える前にログをとる
-        printf("matchのアドレス: %p\n", match.board);
-        log.push_back(match);
-        cout << "loged\n";
-        log[i].print_board();
+        if(!is_wait) { // 
+            log.push_back(match);
+        }
 
         match.print_board();
 
         if (match.check_pass() != 0) {
-            input_data = input_key(&match);
-            match.change_board(input_data.x, input_data.y);
+            int key = input_key(&match, input_data);
+            if(key == KEY_INPUT) {
+                match.change_board(input_data.x, input_data.y);
+            } else if(key == KEY_WAIT && match.turn != 0) {
+                for(int j = 0; j < N; j++) {
+                    for(int k = 0; k < N; k++) {
+                        match.board[j][k] = log[i - 1].board[j][k];
+                        match.turn -= 2;
+                    }
+                }
+            }
         }
         match.k *= -1;
         match.turn++;
     }
 
-    // for(int i = 0; i < N; i++) {
-    //     delete match.board[i];
-    // }
-    // delete match.board;
-
-    for(int i = 0; i < 3; i++) {
-        log[i].print_board();
-        printf("addr: %p\n", log[i].board);
+    for(auto itr = log.begin(); itr != log.end(); itr++) {
+        (*itr).print_board();
     }
 
     return 0;

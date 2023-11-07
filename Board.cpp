@@ -42,9 +42,6 @@ Board::Board(const Board &b)
             board[i][j] = b.board[i][j];
         }
     }
-    cout << "コピーコンストラクタ\n";
-    printf("コピー元のアドレス: %p\n", b.board);
-    printf("コピー先のアドレス: %p\n", board);
 
     cur.x = b.cur.x;
     cur.y = b.cur.y;
