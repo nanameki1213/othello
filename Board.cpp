@@ -52,6 +52,8 @@ void Board::print_board()
         }
         cout << endl;
     }
+
+    cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
 }
 
 int Board::check_finish()
