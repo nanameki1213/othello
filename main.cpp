@@ -1,5 +1,8 @@
 #include <iostream>
 #include "Board.hpp"
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
 
 using namespace std;
 #define T 100
@@ -12,6 +15,19 @@ struct LOG {
     int **board;
 };
 
+int getch(void)
+{
+	struct termios oldattr, newattr;
+	int ch;
+	tcgetattr(STDIN_FILENO, &oldattr);
+	newattr = oldattr;
+	newattr.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+	return ch;
+}
+
 struct INPUT_DATA input_key(Board *match)
 {
     struct INPUT_DATA data;
@@ -21,8 +37,7 @@ struct INPUT_DATA input_key(Board *match)
     char c;
     bool is_decide = false;
     while(!is_decide) {
-        c = getc(stdin);
-        switch(c) {
+        switch(getch()) {
             case 'w':
                 cur.y--;
                 break;
