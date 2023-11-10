@@ -51,6 +51,7 @@ Board::Board(const Board &b)
 
 void Board::print_board()
 {
+    cout << "turn: " << turn << endl;
     printf("\n現在のターンは%sです\n\n", k == BLACK ? "〇" : "●");
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {

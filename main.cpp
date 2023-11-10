@@ -12,6 +12,7 @@ using namespace std;
 #define KEY_INPUT 0
 #define KEY_WAIT 1
 #define KEY_BACK 2
+#define KEY_EXIT 3
 
 typedef struct LOG LOG;
 
@@ -60,6 +61,8 @@ int input_key(Board *match, struct INPUT_DATA &data)
                     return KEY_WAIT;
                 case 't':
                     return KEY_BACK;
+                case 'x':
+                    return KEY_EXIT;
 
                 case '\n':
                     is_decide = true;
@@ -77,7 +80,7 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
             system("clear"); // windows環境ならsystem("cls");
             match->print_board();
-            cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n";
+            cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n終了:x\n";
 
         }
 
@@ -106,30 +109,52 @@ int main(void)
     k = 1;
     match.k = k;
     bool is_wait = false;
+    bool is_acceptable_input = false;
 
-    for(int i = 0; i < 100; i++) {
-    // while (match.check_finish() != 0) {
+    // for(int i = 0; i < 100; i++) {
+    while (match.check_finish() != 0) {
         system("clear");
 
         // boardに変更を加える前にログをとる
-        if(!is_wait) { // 
-            log.push_back(match);
+        if(is_wait) { // 待った!されたらログを書き換える
+            log.pop_back();
+            is_wait = false;
         }
-
+        log.push_back(match);
         match.print_board();
 
         if (match.check_pass() != 0) {
-            int key = input_key(&match, input_data);
-            if(key == KEY_INPUT) {
-                match.change_board(input_data.x, input_data.y);
-            } else if(key == KEY_WAIT && match.turn != 0) {
-                for(int j = 0; j < N; j++) {
-                    for(int k = 0; k < N; k++) {
-                        match.board[j][k] = log[i - 1].board[j][k];
+            do {
+                is_acceptable_input = true;
+                int key = input_key(&match, input_data);
+                switch(key) {
+                    case KEY_INPUT:
+                        match.change_board(input_data.x, input_data.y);
+                        break;
+                    case KEY_WAIT:
+                        if(match.turn == 0) { // ターン1では待った!できない
+                            cout << "このターンでは待ったできません" << endl;
+                            is_acceptable_input = false;
+                            break;
+                        }
+                        // 1つ前のターンの盤面を現在の盤面にコピー
+                        for(int i = 0; i < N; i++) {
+                            for(int j = 0; j < N; j++) {
+                                match.board[i][j] = log[match.turn].board[i][j];
+                            }
+                        }
                         match.turn -= 2;
-                    }
+                        is_wait = true;
+                        break;
+                    case KEY_BACK:
+                        break;
+                    case KEY_EXIT:
+                        for(auto itr = log.begin(); itr != log.end(); itr++) {
+                            (*itr).print_board();
+                        }
+                        return 0;
                 }
-            }
+            }while(is_acceptable_input == false);
         }
         match.k *= -1;
         match.turn++;
