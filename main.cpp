@@ -117,6 +117,7 @@ int main(void)
 
         // boardに変更を加える前にログをとる
         if(is_wait) { // 待った!されたらログを書き換える
+            cout << "一手戻る\n";
             log.pop_back();
             is_wait = false;
         }
@@ -140,7 +141,7 @@ int main(void)
                         // 1つ前のターンの盤面を現在の盤面にコピー
                         for(int i = 0; i < N; i++) {
                             for(int j = 0; j < N; j++) {
-                                match.board[i][j] = log[match.turn].board[i][j];
+                                match.board[i][j] = log[match.turn - 1].board[i][j];
                             }
                         }
                         match.turn -= 2;
@@ -149,6 +150,7 @@ int main(void)
                     case KEY_BACK:
                         break;
                     case KEY_EXIT:
+                        cout << "ログを表示\n";
                         for(auto itr = log.begin(); itr != log.end(); itr++) {
                             (*itr).print_board();
                         }
