@@ -14,14 +14,6 @@ using namespace std;
 #define KEY_BACK 2
 #define KEY_EXIT 3
 
-typedef struct LOG LOG;
-
-struct LOG {
-    LOG *next;
-    LOG *prev;
-    int **board;
-};
-
 int getch(void)
 {
 	struct termios oldattr, newattr;
@@ -120,6 +112,7 @@ int main(void)
             cout << "一手戻る\n";
             log.pop_back();
             is_wait = false;
+            cout << log.size() << endl;
         }
         log.push_back(match);
         match.print_board();
