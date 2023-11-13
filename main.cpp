@@ -113,8 +113,9 @@ int main(void)
             log.pop_back();
             is_wait = false;
             cout << log.size() << endl;
+        } else {
+            log.push_back(match);
         }
-        log.push_back(match);
         match.print_board();
 
         if (match.check_pass() != 0) {
