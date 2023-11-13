@@ -5,10 +5,15 @@ using namespace std;
 
 #define PI 3.14
 
-Board::Board()
+Board::Board(int **init_board)
 {
     cur.x = 1;
     cur.y = 1;
+
+    turn = 0;
+
+    if(init_board != nullptr)
+        board = init_board;
 
     board = new int*[N];
     for(int i = 0; i < N; i++) {
@@ -28,7 +33,6 @@ Board::Board()
     board[4][4] = board[5][5] = WHITE;
     board[4][5] = board[5][4] = BLACK;
 
-    turn = 0;
 }
 
 Board::Board(const Board &b)
@@ -78,6 +82,13 @@ void Board::print_board()
     }
 
     cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
+}
+
+bool Board::is_legal_coord(int x, int y)
+{
+    if(x < 1 || x > N - 2 || y < 1 || y > N - 2)
+        return false;
+    return true;
 }
 
 int Board::check_finish()

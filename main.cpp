@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 #define T 100
@@ -100,71 +101,31 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
 int main(void)
 {
-    int k;
-    struct INPUT_DATA input_data;
-
-    Board match;
-    vector<Board> log;
-
-    k = 1;
-    match.k = k;
-    bool is_wait = false;
-    bool is_acceptable_input = false;
-
-    // for(int i = 0; i < 100; i++) {
-    while (match.check_finish() != 0) {
-        system("clear");
-
-        // boardに変更を加える前にログをとる
-        if(is_wait) { // 待った!されたらログを書き換える
-            cout << "一手戻る\n";
-            log.pop_back();
-            is_wait = false;
-        }
-        log.push_back(match);
-        match.print_board();
-
-        if (match.check_pass() != 0) {
-            do {
-                is_acceptable_input = true;
-                int key = input_key(&match, input_data);
-                switch(key) {
-                    case KEY_INPUT:
-                        match.change_board(input_data.x, input_data.y);
-                        break;
-                    case KEY_WAIT:
-                        if(match.turn == 0) { // ターン1では待った!できない
-                            cout << "このターンでは待ったできません" << endl;
-                            is_acceptable_input = false;
-                            break;
-                        }
-                        // 1つ前のターンの盤面を現在の盤面にコピー
-                        for(int i = 0; i < N; i++) {
-                            for(int j = 0; j < N; j++) {
-                                match.board[i][j] = log[match.turn - 1].board[i][j];
-                            }
-                        }
-                        match.turn -= 2;
-                        is_wait = true;
-                        break;
-                    case KEY_BACK:
-                        break;
-                    case KEY_EXIT:
-                        cout << "ログを表示\n";
-                        for(auto itr = log.begin(); itr != log.end(); itr++) {
-                            (*itr).print_board();
-                        }
-                        return 0;
-                }
-            }while(is_acceptable_input == false);
-        }
-        match.k *= -1;
-        match.turn++;
+    int **test_board = new int*[N];
+    for(int i = 0; i < N; i++) {
+        test_board[i] = new int[N];
     }
 
-    for(auto itr = log.begin(); itr != log.end(); itr++) {
-        (*itr).print_board();
+    Board tmp;
+
+    // テスト用盤面作成
+    int x = 4, y = 4;
+    int mx, my;
+    for(int direc = 0; direc < DIRECTION_MAX; direc++) {
+        while(tmp.is_legal_coord(mx, my)) {
+            mx = x + round(cos(PI/4 * direc));
+            my = y + round(sin(PI/4 * direc));
+            if(!tmp.is_legal_coord(mx, my))
+                break;
+            else
+                test_board[my][mx] = BLACK;
+        }
+        test_board[my][mx] = WHITE;
     }
+
+    Board match(test_board);
+
+    match.print_board();
 
     return 0;
 }

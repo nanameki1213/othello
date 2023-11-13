@@ -20,6 +20,7 @@ enum {
     LEFT_DOWN,
     DOWN,
     RIGHT_DOWN,
+    DIRECTION_MAX
 };
 
 class Board {
@@ -29,10 +30,11 @@ public:
     int k;
     struct INPUT_DATA cur;
 
-    Board();
+    Board(int **init_board = nullptr);
     Board(const Board &b);
 
     bool can_put(int x, int y);
+    bool is_legal_coord(int x, int y);
     bool check_change(int x, int y, int direc);
     void change_in_row(int x, int y, int direc);
     void print_board();
