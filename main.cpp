@@ -1,40 +1,77 @@
 #include <iostream>
 #include "Board.hpp"
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
 
 using namespace std;
 #define T 100
 
-int check_finish(int t, int board[][N])
-{
-    return 0;
-}
+typedef struct LOG LOG;
 
-int check_pass(int k, int board[][N])
+struct LOG {
+    LOG *next;
+    LOG *prev;
+    int **board;
+};
+
+int getch(void)
 {
-    return 0;
+	struct termios oldattr, newattr;
+	int ch;
+	tcgetattr(STDIN_FILENO, &oldattr);
+	newattr = oldattr;
+	newattr.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+	return ch;
 }
 
 struct INPUT_DATA input_key(Board *match)
 {
-    int x, y;
     struct INPUT_DATA data;
 
-    do {
+    struct INPUT_DATA cur = match->cur;
 
-        cout << "手を打つ場所を決めてください:" << endl;
-        cout << "x:"; cin >> x;
-        cout << "y:"; cin >> y;
+    char c;
+    bool is_decide = false;
+    while(!is_decide) {
+        switch(getch()) {
+            case 'w':
+                cur.y--;
+                break;
+            case 's':
+                cur.y++;
+                break;
+            case 'a':
+                cur.x--;
+                break;
+            case 'd':
+                cur.x++;
+                break;
 
-        if(match->can_put(x, y)) {
-            break;
-        } else {
-            printf("その場所にはおけません\n");
+            case '\n':
+                is_decide = true;
+                break;
         }
+        if(cur.x > N - 2)
+            cur.x = N - 2;
+        if(cur.x < 1)
+            cur.x = 1;
+        if(cur.y > N - 2)
+            cur.y = N - 2;
+        if(cur.y < 1)
+            cur.y = 1;
+        match->cur = cur;
 
-    } while(1);
+        system("clear"); // windows環境ならsystem("cls");
+        match->print_board();
 
-    data.x = x;
-    data.y = y;
+    }
+
+    data.x = cur.x;
+    data.y = cur.y;
 
     return data;
 
@@ -42,22 +79,24 @@ struct INPUT_DATA input_key(Board *match)
 
 int main(void)
 {
-    int k;
-    struct INPUT_DATA input_data;
-
     Board match;
+    INPUT_DATA data;
+    INPUT_DATA cur = {0, 0};
 
-    k = 1;
-    match.k = k;
+    match.print_board();
+
+    match.k = 1;
     while (match.check_finish() != 0) {
         match.print_board();
-        match.k = k;
         match.turn++;
-        if (match.check_pass() != 0) {
-            input_data = input_key(&match);
-            match.change_board(input_data.x, input_data.y);
+        if(match.check_pass() != 0) {
+            data = input_key(&match);
         }
-        k = k * -1;
+        if (match.check_pass() != 0) {
+            data = input_key(&match);
+            match.change_board(data.x, data.y);
+        }
+        match.k *= -1;
     }
 
     return 0;

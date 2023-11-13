@@ -6,6 +6,9 @@ using namespace std;
 
 Board::Board()
 {
+    cur.x = 1;
+    cur.y = 1;
+
     board = new int*[N];
     for(int i = 0; i < N; i++) {
         board[i] = new int[N];
@@ -32,6 +35,9 @@ void Board::print_board()
     printf("\n現在のターンは%sです\n\n", k == BLACK ? "★" : "●");
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
+            if(cur.x == j && cur.y == i) {
+                cout << "\x1b[48;5;242m";
+            }
             switch(board[i][j]) {
                 case NONE:
                     cout << "--"; break;
@@ -41,12 +47,17 @@ void Board::print_board()
                     cout << "★"; break;
                 case OUT_OF_RANGE:
                     cout << "■";
+                    break;
                 default:
                     ;
             }
+            cout << "\x1b[49m";
+            cout << "\x1b[39m";
         }
         cout << endl;
     }
+
+    cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
 }
 
 int Board::check_finish()
