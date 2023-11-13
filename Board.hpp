@@ -7,6 +7,8 @@
 #define BLACK -1
 #define OUT_OF_RANGE 2
 
+#define PI 3.14
+
 struct INPUT_DATA {
     int x, y;
 };

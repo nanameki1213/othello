@@ -101,31 +101,54 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
 int main(void)
 {
-    int **test_board = new int*[N];
-    for(int i = 0; i < N; i++) {
-        test_board[i] = new int[N];
-    }
-
-    Board tmp;
-
     // テスト用盤面作成
     int x = 4, y = 4;
     int mx, my;
     for(int direc = 0; direc < DIRECTION_MAX; direc++) {
-        while(tmp.is_legal_coord(mx, my)) {
-            mx = x + round(cos(PI/4 * direc));
-            my = y + round(sin(PI/4 * direc));
-            if(!tmp.is_legal_coord(mx, my))
-                break;
-            else
-                test_board[my][mx] = BLACK;
+
+        int **test_board = new int*[N];
+        for(int i = 0; i < N; i++) {
+            test_board[i] = new int[N];
+        }
+
+        Board tmp;
+
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < N; j++) {
+                if(i == 0 || j == 0 || i == 9 || j == 9) {
+                    test_board[i][j] = OUT_OF_RANGE;
+                    continue;
+                } else {
+                    test_board[i][j] = NONE;
+                }
+            }
+        }
+
+        mx = x;
+        my = y;
+        while(tmp.is_legal_coord(mx + round(cos(PI/4*direc)), my + round(sin(PI/4*direc)))) {
+            mx += round(cos(PI/4 * direc));
+            my += round(sin(PI/4 * direc));
+            test_board[my][mx] = BLACK;
         }
         test_board[my][mx] = WHITE;
+
+        Board match(test_board);
+        match.k = WHITE;
+
+        match.print_board();
+
+        if(match.can_put(x, y)) {
+            cout << "おけます\n";
+        }
+
+        for(int i = 0; i < N; i++) {
+            delete test_board[i];
+        }
+        delete test_board;
     }
 
-    Board match(test_board);
 
-    match.print_board();
 
     return 0;
 }

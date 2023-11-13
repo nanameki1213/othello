@@ -3,8 +3,6 @@
 #include <string.h>
 using namespace std;
 
-#define PI 3.14
-
 Board::Board(int **init_board)
 {
     cur.x = 1;
@@ -12,8 +10,10 @@ Board::Board(int **init_board)
 
     turn = 0;
 
-    if(init_board != nullptr)
+    if(init_board != nullptr) {
         board = init_board;
+        return;   
+    }
 
     board = new int*[N];
     for(int i = 0; i < N; i++) {
