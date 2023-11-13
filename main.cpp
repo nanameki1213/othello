@@ -14,17 +14,63 @@ int check_pass(int k, int board[][N])
     return 0;
 }
 
+int getch(void)
+{
+	struct termios oldattr, newattr;
+	int ch;
+	tcgetattr(STDIN_FILENO, &oldattr);
+	newattr = oldattr;
+	newattr.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+	return ch;
+}
+
 struct INPUT_DATA input_key(Board *match)
 {
-    int x, y;
     struct INPUT_DATA data;
 
-    cout << "手を打つ場所を決めてください:" << endl;
-    cout << "x:"; cin >> x;
-    cout << "y:"; cin >> y;
+    struct INPUT_DATA cur = match->cur;
 
-    data.x = x;
-    data.y = y;
+    char c;
+    bool is_decide = false;
+    while(!is_decide) {
+        switch(getch()) {
+            case 'w':
+                cur.y--;
+                break;
+            case 's':
+                cur.y++;
+                break;
+            case 'a':
+                cur.x--;
+                break;
+            case 'd':
+                cur.x++;
+                break;
+
+            case '\n':
+                is_decide = true;
+                break;
+        }
+        if(cur.x > N - 2)
+            cur.x = N - 2;
+        if(cur.x < 1)
+            cur.x = 1;
+        if(cur.y > N - 2)
+            cur.y = N - 2;
+        if(cur.y < 1)
+            cur.y = 1;
+        match->cur = cur;
+
+        system("clear"); // windows環境ならsystem("cls");
+        match->print_board();
+
+    }
+
+    data.x = cur.x;
+    data.y = cur.y;
 
     return data;
 
