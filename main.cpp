@@ -15,14 +15,6 @@ using namespace std;
 #define KEY_BACK 2
 #define KEY_EXIT 3
 
-typedef struct LOG LOG;
-
-struct LOG {
-    LOG *next;
-    LOG *prev;
-    int **board;
-};
-
 int getch(void)
 {
 	struct termios oldattr, newattr;
@@ -101,6 +93,9 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
 int main(void)
 {
+
+    struct INPUT_DATA data = {0,0};
+
     // テスト用盤面作成
     int x = 4, y = 4;
     int mx, my;
@@ -138,17 +133,18 @@ int main(void)
 
         match.print_board();
 
-        if(match.can_put(x, y)) {
-            cout << "おけます\n";
+        if(input_key(&match, data) == KEY_INPUT) { // 置ける
+            match.board[data.y][data.x] = WHITE;
         }
+
+        system("clear");
+        match.print_board();
 
         for(int i = 0; i < N; i++) {
             delete test_board[i];
         }
         delete test_board;
     }
-
-
 
     return 0;
 }

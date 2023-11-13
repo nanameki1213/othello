@@ -60,7 +60,7 @@ void Board::print_board()
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             if(cur.x == j && cur.y == i) {
-                cout << "\x1b[48;5;242m";
+                cout << "\x1b[7m";
             }
             switch(board[i][j]) {
                 case NONE:
@@ -77,6 +77,7 @@ void Board::print_board()
             }
             cout << "\x1b[49m";
             cout << "\x1b[39m";
+            cout << "\x1b[0m";
         }
         cout << endl;
     }
