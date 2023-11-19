@@ -1,5 +1,8 @@
 #include <iostream>
 #include "Board.hpp"
+#include <termio.h>
+#include <stdio.h>
+#include <unistd.h>
 
 using namespace std;
 #define T 100
