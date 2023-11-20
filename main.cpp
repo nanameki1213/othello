@@ -98,13 +98,14 @@ int main(void)
     Board match;
     vector<Board> log;
 
-    k = 1;
+    k = BLACK;
     match.k = k;
     bool is_wait = false;
     bool is_acceptable_input = false;
 
     // for(int i = 0; i < 100; i++) {
-    while (match.check_finish() != 0) {
+    // while (!match.check_finish()) {
+    while (1) {
         system("clear");
 
         // boardに変更を加える前にログをとる
@@ -118,7 +119,7 @@ int main(void)
         }
         match.print_board();
 
-        if (match.check_pass() != 0) {
+        if (!match.check_pass()) {
             do {
                 is_acceptable_input = true;
                 int key = input_key(&match, input_data);
@@ -151,14 +152,36 @@ int main(void)
                         return 0;
                 }
             }while(is_acceptable_input == false);
+        } else {
+            cout << "パス!\n";
+            return 0;
         }
         match.k *= -1;
         match.turn++;
     }
 
-    for(auto itr = log.begin(); itr != log.end(); itr++) {
-        (*itr).print_board();
+    cout << "終了\n";
+
+    int black_num = 0, white_num = 0;
+
+    for(int i = 1; i < N - 1; i++) {
+        for(int j = 0; j < N - 1; j++) {
+            if(match.board[i][j] == WHITE)
+                white_num++;
+            else if(match.board[i][j] == BLACK)
+                black_num++;
+        }
     }
+
+    cout << "黒のコマ数: " << black_num << endl;
+    cout << "白のコマ数: " << white_num << endl;
+
+    // // 最終盤面のログをとる
+    // log.push_back(match);
+
+    // for(auto itr = log.begin(); itr != log.end(); itr++) {
+    //     (*itr).print_board();
+    // }
 
     return 0;
 }

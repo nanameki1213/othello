@@ -36,7 +36,7 @@ public:
     bool check_change(int x, int y, int direc);
     void change_in_row(int x, int y, int direc);
     void print_board();
-    int check_finish();
-    int check_pass();
+    bool check_finish();
+    bool check_pass();
     void change_board(int x, int y);
 };

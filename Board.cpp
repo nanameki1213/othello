@@ -53,11 +53,17 @@ void Board::print_board()
 {
     cout << "turn: " << turn << endl;
     printf("\n現在のターンは%sです\n\n", k == BLACK ? "〇" : "●");
+
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             if(cur.x == j && cur.y == i) {
                 cout << "\x1b[48;5;242m";
             }
+
+            if(can_put(j, i)) {
+                cout << "\x1b[43m";
+            }
+
             switch(board[i][j]) {
                 case NONE:
                     cout << "--"; break;
@@ -80,14 +86,43 @@ void Board::print_board()
     cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
 }
 
-int Board::check_finish()
+// 盤面が終了状態ならtrueを返す
+bool Board::check_finish()
 {
-    return 1;
+  Board *check = new Board(*this);
+
+  bool is_white_pass = false, is_black_pass = false;
+
+  check->k = WHITE;
+
+  if(check->check_pass())
+    is_white_pass = true;
+  
+  check->k = BLACK;
+
+  if(check->check_pass())
+    is_black_pass = true;
+
+  delete check;
+
+  if(is_black_pass && is_white_pass)
+    return true;
+
+  return false;
 }
 
-int Board::check_pass()
+// パスならtrueを返す
+bool Board::check_pass()
 {
-    return 1;
+  for(int i = 1; i < N - 1; i++) {
+    for(int j = 1; j < N - 1; j++) {
+      if(can_put(j, i)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 void Board::change_board(int x, int y)
