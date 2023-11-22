@@ -56,13 +56,13 @@ void Board::print_board()
 
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
+            if(can_put(j, i)) {
+                cout << "\x1b[43m";
+            }
             if(cur.x == j && cur.y == i) {
                 cout << "\x1b[48;5;242m";
             }
 
-            if(can_put(j, i)) {
-                cout << "\x1b[43m";
-            }
 
             switch(board[i][j]) {
                 case NONE:
