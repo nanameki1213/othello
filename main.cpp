@@ -104,8 +104,8 @@ int main(void)
     bool is_acceptable_input = false;
 
     // for(int i = 0; i < 100; i++) {
-    // while (!match.check_finish()) {
-    while (1) {
+    while (!match.check_finish()) {
+    // while (1) {
         system("clear");
 
         // boardに変更を加える前にログをとる
@@ -145,16 +145,17 @@ int main(void)
                     case KEY_BACK:
                         break;
                     case KEY_EXIT:
-                        cout << "ログを表示\n";
-                        for(auto itr = log.begin(); itr != log.end(); itr++) {
-                            (*itr).print_board();
-                        }
+                        // cout << "ログを表示\n";
+                        // for(auto itr = log.begin(); itr != log.end(); itr++) {
+                        //     (*itr).print_board();
+                        // }
                         return 0;
                 }
             }while(is_acceptable_input == false);
         } else {
             cout << "パス!\n";
-            return 0;
+            sleep(1);
+            // return 0;
         }
         match.k *= -1;
         match.turn++;
