@@ -99,6 +99,28 @@ int input_key(Board *match, struct INPUT_DATA &data)
     return KEY_INPUT;
 }
 
+struct INPUT_DATA get_max(Board *match)
+{
+    vector<struct INPUT_DATA> act;
+    match->get_legal_act(act);
+    int black,white;
+    int current_num = match->get_current_num();
+
+    struct INPUT_DATA max_coord = act[0];
+    int max_num = 0;
+
+    for(auto itr = act.begin(); itr != act.end(); itr++) {
+        Board *try_board = new Board(*match);
+        try_board->change_board((*itr).x, (*itr).y);
+        int try_num = try_board->get_current_num();
+        if(try_board->get_current_num() - current_num > max_num) {
+            max_coord = *itr;
+            max_num = try_board->get_current_num() - current_num;
+        }
+    }
+    return max_coord;
+}
+
 int main(void)
 {
 
@@ -134,10 +156,10 @@ int main(void)
             int num;
             cin >> num;
             if(num == 1) {
-                is_algorithm_first_enable = true;
+                is_algorithm_first_enable = false;
                 break;
             } else if(num == 2) {
-                is_algorithm_first_enable = false;
+                is_algorithm_first_enable = true;
                 break;
             }
         } while(1);
@@ -162,7 +184,8 @@ int main(void)
         if (!match.check_pass()) {
 
             // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
-            if(!is_algorithm_enable || (is_algorithm_enable && ((is_algorithm_first_enable && match.k != WHITE) || (!is_algorithm_first_enable && match.k != BLACK)))) {
+            if(!is_algorithm_enable || 
+              (is_algorithm_enable && ((is_algorithm_first_enable && match.k != WHITE) || (!is_algorithm_first_enable && match.k != BLACK)))) {
                 int key = input_key(&match, input_data);
                 switch(key) {
                     case KEY_INPUT:
@@ -192,11 +215,14 @@ int main(void)
                         return 0;
                 }
             } else if(is_algorithm_first_enable && match.k == WHITE || !is_algorithm_first_enable && match.k == BLACK) {
-                vector<struct INPUT_DATA> act;
-                match.get_legal_act(act);
-                int act_num = rand()%act.size();
+                // vector<struct INPUT_DATA> act;
+                // match.get_legal_act(act);
+                // int act_num = rand()%act.size();
 
-                match.change_board(act[act_num].x, act[act_num].y);
+                // match.change_board(act[act_num].x, act[act_num].y);
+                struct INPUT_DATA max = get_max(&match);
+                match.change_board(max.x, max.y);
+
             }
         } else {
             cout << "パス!\n";

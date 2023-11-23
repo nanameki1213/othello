@@ -87,6 +87,19 @@ void Board::print_board()
     cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
 }
 
+int Board::get_current_num()
+{
+    int num = 0;
+    for(int i = 1; i < N - 1; i++) {
+        for(int j = 1; j < N - 1; j++) {
+            if(board[i][j] == k)
+                num++;
+        }
+    }
+
+    return num;
+}
+
 // 盤面が終了状態ならtrueを返す
 bool Board::check_finish()
 {
@@ -237,7 +250,7 @@ void Board::get_legal_act(vector<struct INPUT_DATA> &act)
 
     for(int i = 1; i < N - 1; i++) {
         for(int j = 1; j < N - 1; j++) {
-            if(can_put(i, j)) {
+            if(can_put(j, i)) {
                 struct INPUT_DATA legal_act = {j, i};
                 act.push_back(legal_act);
             }
