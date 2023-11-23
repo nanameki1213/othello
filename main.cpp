@@ -50,7 +50,12 @@ int input_key(Board *match, struct INPUT_DATA &data)
                     cur.x++;
                     break;
                 case 'b':
-                    return KEY_WAIT;
+                    if(match->turn == 0) {
+                        cout << "このターンでは待ったできません" << endl;
+                        break;
+                    } else {
+                        return KEY_WAIT;
+                    }
                 case 't':
                     return KEY_BACK;
                 case 'x':
@@ -71,6 +76,9 @@ int input_key(Board *match, struct INPUT_DATA &data)
             match->cur = cur;
 
             system("clear"); // windows環境ならsystem("cls");
+            vector<struct INPUT_DATA> act;
+            match->get_legal_act(act);
+            cout << "legal act num:" << act.size() << endl;
             match->print_board();
             cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n終了:x\n";
 
@@ -82,6 +90,7 @@ int input_key(Board *match, struct INPUT_DATA &data)
         } else {
             cout << "(" << cur.x << "," << cur.y << ")には置けません\n";
         }
+
     }while(1);
 
     data.x = cur.x;
@@ -92,6 +101,9 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
 int main(void)
 {
+
+    srand((unsigned)time(NULL));
+
     int k;
     struct INPUT_DATA input_data;
 
@@ -101,7 +113,35 @@ int main(void)
     k = BLACK;
     match.k = k;
     bool is_wait = false;
-    bool is_acceptable_input = false;
+    bool is_algorithm_enable = false;
+    bool is_algorithm_first_enable = false;
+
+    do {
+        cout << "探索アルゴリズムを実行しますか?(y/n):";
+        char c = getchar();
+        if(c == 'y' || c == 'Y') {
+            is_algorithm_enable = true;
+            break;
+        } else if(c == 'n' || c == 'N') {
+            is_algorithm_enable = false;
+            break;
+        }
+    } while(1);
+
+    if(is_algorithm_enable) {
+        do {
+            cout << "探索を実行する打ち手を選択(先攻:1,後攻:2):";
+            int num;
+            cin >> num;
+            if(num == 1) {
+                is_algorithm_first_enable = true;
+                break;
+            } else if(num == 2) {
+                is_algorithm_first_enable = false;
+                break;
+            }
+        } while(1);
+    }
 
     // for(int i = 0; i < 100; i++) {
     while (!match.check_finish()) {
@@ -120,8 +160,9 @@ int main(void)
         match.print_board();
 
         if (!match.check_pass()) {
-            do {
-                is_acceptable_input = true;
+
+            // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
+            if(!is_algorithm_enable || (is_algorithm_enable && ((is_algorithm_first_enable && match.k != WHITE) || (!is_algorithm_first_enable && match.k != BLACK)))) {
                 int key = input_key(&match, input_data);
                 switch(key) {
                     case KEY_INPUT:
@@ -130,7 +171,6 @@ int main(void)
                     case KEY_WAIT:
                         if(match.turn == 0) { // ターン1では待った!できない
                             cout << "このターンでは待ったできません" << endl;
-                            is_acceptable_input = false;
                             break;
                         }
                         // 1つ前のターンの盤面を現在の盤面にコピー
@@ -151,11 +191,15 @@ int main(void)
                         // }
                         return 0;
                 }
-            }while(is_acceptable_input == false);
+            } else if(is_algorithm_first_enable && match.k == WHITE || !is_algorithm_first_enable && match.k == BLACK) {
+                vector<struct INPUT_DATA> act;
+                match.get_legal_act(act);
+                int act_num = rand()%act.size();
+
+                match.change_board(act[act_num].x, act[act_num].y);
+            }
         } else {
             cout << "パス!\n";
-            sleep(1);
-            // return 0;
         }
         match.k *= -1;
         match.turn++;

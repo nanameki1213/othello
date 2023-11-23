@@ -1,6 +1,7 @@
 #pragma
 
 #include <iostream>
+#include <vector>
 #define N 10
 #define NONE 0
 #define WHITE 1
@@ -39,4 +40,6 @@ public:
     bool check_finish();
     bool check_pass();
     void change_board(int x, int y);
+
+    void get_legal_act(std::vector<struct INPUT_DATA> &act);
 };

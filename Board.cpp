@@ -1,6 +1,7 @@
 #include "Board.hpp"
 #include <math.h>
 #include <string.h>
+#include <vector>
 using namespace std;
 
 #define PI 3.14
@@ -225,4 +226,21 @@ bool Board::check_change(int x, int y, int direc)
     }
 
     return false;
+}
+
+void Board::get_legal_act(vector<struct INPUT_DATA> &act)
+{
+    if(!act.empty()) {
+        cout << "空のデータを渡してください";
+        return;
+    }
+
+    for(int i = 1; i < N - 1; i++) {
+        for(int j = 1; j < N - 1; j++) {
+            if(can_put(i, j)) {
+                struct INPUT_DATA legal_act = {j, i};
+                act.push_back(legal_act);
+            }
+        }
+    }
 }
