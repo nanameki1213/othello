@@ -71,6 +71,14 @@ int input_key(Board *match, struct INPUT_DATA &data)
             match->cur = cur;
 
             system("clear"); // windows環境ならsystem("cls");
+            int canput_num = 0;
+            for(int i = 1; i <= N - 1; i++) {
+                for(int j = 1; j <= N - 1; j++) {
+                    if(match->can_put(j, i) == match->k)
+                        canput_num++;
+                }
+            }
+            cout << "配置可能数:" << canput_num << endl;
             match->print_board();
             cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n終了:x\n";
 
