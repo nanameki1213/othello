@@ -11,6 +11,8 @@ Board::Board()
     cur.x = 1;
     cur.y = 1;
 
+    k = BLACK;
+
     board = new int*[N];
     for(int i = 0; i < N; i++) {
         board[i] = new int[N];

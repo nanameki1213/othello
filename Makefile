@@ -1,6 +1,6 @@
 CC	= g++
 CFLAGS = -Wall -O3 -std=c++11
-SRCS = main.cpp Board.cpp
+SRCS = main.cpp Board.cpp GameTree.cpp
 
 OBJS=$(SRCS:.cpp=.o)
 
