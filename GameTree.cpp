@@ -96,10 +96,18 @@ void expandChildren_by_num(Game_Node *node, int n)
 }
 
 void printTree(Game_Node *node, int n) {
-    
-    
+    // cout << "n:" << n << endl;
+    if(node->children_node.empty()) {
+        return;
+    }
 
     for(auto itr = node->children_node.begin(); itr != node->children_node.end(); itr++) {
-        printTree(*itr, n - 1);
+        printTree(*itr, n + 1);
+        cout << "|";
+        for(int i = 0; i < n; i++) {
+            cout << ' ';
+        }
+        cout << "|-";
+        cout << endl;
     }
 }

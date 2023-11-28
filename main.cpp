@@ -185,145 +185,148 @@ int ev_score(Board *board)
 int main(void)
 {
 
-    // Game_Node *node = new Game_Node;
-    // Board match;
-    // match.print_board();
-    // node->current_board = &match;
-
-    // node->ev_func = ev_score;
-
-    // expandChildren_by_num(node, 3);
-
-    // cout << "評価値: " << node->evaluete_num << endl;
-
-    srand((unsigned)time(NULL));
-
-    int k;
-    struct INPUT_DATA input_data;
-
+    Game_Node *node = new Game_Node;
     Board match;
-    vector<Board> log;
+    match.print_board();
+    node->current_board = &match;
 
-    k = BLACK;
-    match.k = k;
-    bool is_wait = false;
-    bool is_algorithm_enable = false;
-    int algorithm_k = BLACK;
+    node->ev_func = ev_score;
 
-    do {
-        cout << "探索アルゴリズムを実行しますか?(y/n):";
-        char c = getchar();
-        if(c == 'y' || c == 'Y') {
-            is_algorithm_enable = true;
-            break;
-        } else if(c == 'n' || c == 'N') {
-            is_algorithm_enable = false;
-            break;
-        }
-    } while(1);
+    expandChildren_by_num(node, 3);
 
-    if(is_algorithm_enable) {
-        do {
-            cout << "探索を実行する打ち手を選択(先攻:1,後攻:2):";
-            int num;
-            cin >> num;
-            if(num == 1) {
-                algorithm_k = BLACK;
-                break;
-            } else if(num == 2) {
-                algorithm_k = WHITE;
-                break;
-            }
-        } while(1);
-    }
+    cout << "評価値: " << node->evaluete_num << endl;
 
-    // for(int i = 0; i < 100; i++) {
-    while (!match.check_finish()) {
-    // while (1) {
-        system("clear");
+    printTree(node);
 
-        // boardに変更を加える前にログをとる
-        if(is_wait) { // 待った!されたらログを書き換える
-            cout << "一手戻る\n";
-            log.pop_back();
-            is_wait = false;
-            cout << log.size() << endl;
-        } else {
-            log.push_back(match);
-        }
-        match.print_board();
+    // srand((unsigned)time(NULL));
 
-        if (!match.check_pass()) {
+    // int k;
+    // struct INPUT_DATA input_data;
 
-            // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
-            if(is_algorithm_enable && algorithm_k == match.k) {
-                // vector<struct INPUT_DATA> act;
-                // match.get_legal_act(act);
-                // int act_num = rand()%act.size();
+    // Board match;
+    // vector<Board> log;
 
-                // match.change_board(act[act_num].x, act[act_num].y);
-                struct INPUT_DATA max = get_max(&match);
-                match.change_board(max.x, max.y);
-            } else {
-                int key = input_key(&match, input_data);
-                switch(key) {
-                    case KEY_INPUT:
-                        match.change_board(input_data.x, input_data.y);
-                        break;
-                    case KEY_WAIT:
-                        if(match.turn == 0) { // ターン1では待った!できない
-                            cout << "このターンでは待ったできません" << endl;
-                            break;
-                        }
-                        // 1つ前のターンの盤面を現在の盤面にコピー
-                        for(int i = 0; i < N; i++) {
-                            for(int j = 0; j < N; j++) {
-                                match.board[i][j] = log[match.turn - 1].board[i][j];
-                            }
-                        }
-                        match.turn -= 2;
-                        is_wait = true;
-                        break;
-                    case KEY_BACK:
-                        break;
-                    case KEY_EXIT:
-                        // cout << "ログを表示\n";
-                        // for(auto itr = log.begin(); itr != log.end(); itr++) {
-                        //     (*itr).print_board();
-                        // }
-                        return 0;
-                }
+    // k = BLACK;
+    // match.k = k;
+    // bool is_wait = false;
+    // bool is_algorithm_enable = false;
+    // int algorithm_k = BLACK;
 
-            }
-        } else {
-            cout << "パス!\n";
-        }
-        match.k *= -1;
-        match.turn++;
-    }
+    // do {
+    //     cout << "探索アルゴリズムを実行しますか?(y/n):";
+    //     char c = getchar();
+    //     if(c == 'y' || c == 'Y') {
+    //         is_algorithm_enable = true;
+    //         break;
+    //     } else if(c == 'n' || c == 'N') {
+    //         is_algorithm_enable = false;
+    //         break;
+    //     }
+    // } while(1);
 
-    cout << "終了\n";
-
-    int black_num = 0, white_num = 0;
-
-    for(int i = 1; i < N - 1; i++) {
-        for(int j = 0; j < N - 1; j++) {
-            if(match.board[i][j] == WHITE)
-                white_num++;
-            else if(match.board[i][j] == BLACK)
-                black_num++;
-        }
-    }
-
-    cout << "黒のコマ数: " << black_num << endl;
-    cout << "白のコマ数: " << white_num << endl;
-
-    // // 最終盤面のログをとる
-    // log.push_back(match);
-
-    // for(auto itr = log.begin(); itr != log.end(); itr++) {
-    //     (*itr).print_board();
+    // if(is_algorithm_enable) {
+    //     do {
+    //         cout << "探索を実行する打ち手を選択(先攻:1,後攻:2):";
+    //         int num;
+    //         cin >> num;
+    //         if(num == 1) {
+    //             algorithm_k = BLACK;
+    //             break;
+    //         } else if(num == 2) {
+    //             algorithm_k = WHITE;
+    //             break;
+    //         }
+    //     } while(1);
     // }
+
+    // // for(int i = 0; i < 100; i++) {
+    // while (!match.check_finish()) {
+    // // while (1) {
+    //     system("clear");
+
+    //     // boardに変更を加える前にログをとる
+    //     if(is_wait) { // 待った!されたらログを書き換える
+    //         cout << "一手戻る\n";
+    //         log.pop_back();
+    //         is_wait = false;
+    //         cout << log.size() << endl;
+    //     } else {
+    //         log.push_back(match);
+    //     }
+    //     match.print_board();
+
+    //     if (!match.check_pass()) {
+
+    //         // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
+    //         if(is_algorithm_enable && algorithm_k == match.k) {
+    //             // vector<struct INPUT_DATA> act;
+    //             // match.get_legal_act(act);
+    //             // int act_num = rand()%act.size();
+
+    //             // match.change_board(act[act_num].x, act[act_num].y);
+
+    //             struct INPUT_DATA max = get_max(&match);
+    //             match.change_board(max.x, max.y);
+    //         } else {
+    //             int key = input_key(&match, input_data);
+    //             switch(key) {
+    //                 case KEY_INPUT:
+    //                     match.change_board(input_data.x, input_data.y);
+    //                     break;
+    //                 case KEY_WAIT:
+    //                     if(match.turn == 0) { // ターン1では待った!できない
+    //                         cout << "このターンでは待ったできません" << endl;
+    //                         break;
+    //                     }
+    //                     // 1つ前のターンの盤面を現在の盤面にコピー
+    //                     for(int i = 0; i < N; i++) {
+    //                         for(int j = 0; j < N; j++) {
+    //                             match.board[i][j] = log[match.turn - 1].board[i][j];
+    //                         }
+    //                     }
+    //                     match.turn -= 2;
+    //                     is_wait = true;
+    //                     break;
+    //                 case KEY_BACK:
+    //                     break;
+    //                 case KEY_EXIT:
+    //                     // cout << "ログを表示\n";
+    //                     // for(auto itr = log.begin(); itr != log.end(); itr++) {
+    //                     //     (*itr).print_board();
+    //                     // }
+    //                     return 0;
+    //             }
+
+    //         }
+    //     } else {
+    //         cout << "パス!\n";
+    //     }
+    //     match.k *= -1;
+    //     match.turn++;
+    // }
+
+    // cout << "終了\n";
+
+    // int black_num = 0, white_num = 0;
+
+    // for(int i = 1; i < N - 1; i++) {
+    //     for(int j = 0; j < N - 1; j++) {
+    //         if(match.board[i][j] == WHITE)
+    //             white_num++;
+    //         else if(match.board[i][j] == BLACK)
+    //             black_num++;
+    //     }
+    // }
+
+    // cout << "黒のコマ数: " << black_num << endl;
+    // cout << "白のコマ数: " << white_num << endl;
+
+    // // // 最終盤面のログをとる
+    // // log.push_back(match);
+
+    // // for(auto itr = log.begin(); itr != log.end(); itr++) {
+    // //     (*itr).print_board();
+    // // }
 
     return 0;
 }

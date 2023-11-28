@@ -29,4 +29,4 @@ public:
 };
 
 void expandChildren_by_num(Game_Node *node, int n);
-void printTree(Game_Node *node, int n);
+void printTree(Game_Node *node, int n = 1);
