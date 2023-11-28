@@ -208,7 +208,7 @@ int main(void)
     match.k = k;
     bool is_wait = false;
     bool is_algorithm_enable = false;
-    bool is_algorithm_first_enable = false;
+    int algorithm_k = BLACK;
 
     do {
         cout << "探索アルゴリズムを実行しますか?(y/n):";
@@ -228,10 +228,10 @@ int main(void)
             int num;
             cin >> num;
             if(num == 1) {
-                is_algorithm_first_enable = false;
+                algorithm_k = BLACK;
                 break;
             } else if(num == 2) {
-                is_algorithm_first_enable = true;
+                algorithm_k = WHITE;
                 break;
             }
         } while(1);
@@ -256,8 +256,15 @@ int main(void)
         if (!match.check_pass()) {
 
             // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
-            if(!is_algorithm_enable || 
-              (is_algorithm_enable && ((is_algorithm_first_enable && match.k != WHITE) || (!is_algorithm_first_enable && match.k != BLACK)))) {
+            if(is_algorithm_enable && algorithm_k == match.k) {
+                // vector<struct INPUT_DATA> act;
+                // match.get_legal_act(act);
+                // int act_num = rand()%act.size();
+
+                // match.change_board(act[act_num].x, act[act_num].y);
+                struct INPUT_DATA max = get_max(&match);
+                match.change_board(max.x, max.y);
+            } else {
                 int key = input_key(&match, input_data);
                 switch(key) {
                     case KEY_INPUT:
@@ -286,14 +293,6 @@ int main(void)
                         // }
                         return 0;
                 }
-            } else if(is_algorithm_first_enable && match.k == WHITE || !is_algorithm_first_enable && match.k == BLACK) {
-                // vector<struct INPUT_DATA> act;
-                // match.get_legal_act(act);
-                // int act_num = rand()%act.size();
-
-                // match.change_board(act[act_num].x, act[act_num].y);
-                struct INPUT_DATA max = get_max(&match);
-                match.change_board(max.x, max.y);
 
             }
         } else {
