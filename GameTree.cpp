@@ -66,7 +66,7 @@ void expandChildren_by_num(Game_Node *node, int n)
 {
     // cout << "called expandbynum\n";
     if(n == 1) {
-        node->evaluete_num = node->ev_func(node->current_board);
+        node->evaluete_num = node->ev_func(node->current_board, node->my_k);
         // cout << "評価値: " << node->evaluete_num << endl;
         return;
     }

@@ -3,7 +3,7 @@
 #include "Board.hpp"
 #include <vector>
 
-typedef int (*evaluete_function)(Board *board);
+typedef int (*evaluete_function)(Board *board, int my_k);
 
 class Game_Node {
 public:
