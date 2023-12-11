@@ -16,7 +16,7 @@ public:
     int evaluete_num;
     struct INPUT_DATA pre_act;
 
-    Game_Node();
+    Game_Node(int k);
     Game_Node(const Game_Node &node);
 
     Game_Node *parent_node;
@@ -29,4 +29,4 @@ public:
 };
 
 void expandChildren_by_num(Game_Node *node, int n);
-void printTree(Game_Node *node, int n = 1);
+void printTree(Game_Node *node, int n = -1, int depth = -1);
