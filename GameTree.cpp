@@ -61,11 +61,11 @@ void Game_Node::deleteChildren()
     }
 }
 
-// ゲーム木の深さをnにし，アルファベータ法で最善手を得る
+// ゲーム木の深さをnにし，ミニマックス法で最善手を得る
 void expandChildren_by_num(Game_Node *node, int n)
 {
     // cout << "called expandbynum\n";
-    if(n == 1) {
+    if(n == 0) {
         node->evaluete_num = node->ev_func(node->current_board, node->my_k);
         // cout << "評価値: " << node->evaluete_num << endl;
         return;

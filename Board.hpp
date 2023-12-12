@@ -42,5 +42,5 @@ public:
     void change_board(int x, int y);
 
     void get_legal_act(std::vector<struct INPUT_DATA> &act);
-    int get_current_num();
+    int get_current_num(int target_k);
 };

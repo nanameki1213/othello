@@ -130,7 +130,7 @@ struct INPUT_DATA get_max(Board *match)
     vector<struct INPUT_DATA> act;
     match->get_legal_act(act);
     int black,white;
-    int current_num = match->get_current_num();
+    int current_num = match->get_current_num(match->k);
 
     vector<struct INPUT_DATA> max_coord_arr;
     int max_num;
@@ -139,7 +139,7 @@ struct INPUT_DATA get_max(Board *match)
     for(auto itr = act.begin(); itr != act.end(); itr++) {
         Board *try_board = new Board(*match);
         try_board->change_board((*itr).x, (*itr).y);
-        int try_num = try_board->get_current_num();
+        int try_num = try_board->get_current_num(try_board->k);
 
         if(itr == act.begin()) {
             max_num = try_num;
@@ -260,14 +260,7 @@ unsigned char edit_vs(unsigned char flag)
 
 int ev_score(Board *board, int my_k)
 {
-    int ev_num;
-    if(board->k == my_k) {
-        ev_num = board->get_current_num();
-    } else {
-        Board *my_board = new Board(*board);
-        my_board->k = board->k * -1;
-        ev_num = my_board->get_current_num();
-    }
+    int ev_num = board->get_current_num(my_k);
 
     return ev_num;
 }
@@ -394,7 +387,6 @@ int main(void)
 
         if (!match.check_pass()) {
 
-            // アルゴリズムを使用しない，または，アルゴリズムを使用するが該当する打ち手ではないとき
             if(is_algorithm_enable && algorithm_k == match.k) {
                 // ランダムアルゴリズム
                 // vector<struct INPUT_DATA> act;
@@ -407,7 +399,7 @@ int main(void)
                 // struct INPUT_DATA max = get_max(&match);
                 // match.change_board(max.x, max.y);
 
-                // アルファベータ法
+                // ミニマックス法
                 Game_Node *node = new Game_Node(algorithm_k);
                 node->current_board = &match;
 
@@ -418,14 +410,19 @@ int main(void)
                     cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
                 }
 
-                node->ev_func = ev_best;
+                node->ev_func = ev_score;
 
-                expandChildren_by_num(node, 8);
+                // 第二引数に0を入れるとなんの意味もなくなる
+                expandChildren_by_num(node, 2);
 
-                // printTree(node);
+                printTree(node);
 
                 int max_ev_num;
                 INPUT_DATA best_act;
+                if(node->children_node.empty()) {
+                    printf("ゲーム木の深さが0です\n");
+                    return 1;
+                }
                 for(auto itr = node->children_node.begin(); itr != node->children_node.end(); itr++) {
                     if(itr == node->children_node.begin()) {
                         max_ev_num = (*itr)->evaluete_num;
@@ -440,7 +437,11 @@ int main(void)
                 cout << "評価値:" << max_ev_num << endl;
                 cout << "(" << best_act.x << ", " << best_act.y << ")" << endl;
                 match.change_board(best_act.x, best_act.y);
-                // getchar();
+
+                delete node;
+                
+                getchar();
+                
             } else {
                 int key = input_key(&match, input_data);
                 switch(key) {
@@ -483,14 +484,8 @@ int main(void)
 
     int black_num = 0, white_num = 0;
 
-    for(int i = 1; i < N - 1; i++) {
-        for(int j = 0; j < N - 1; j++) {
-            if(match.board[i][j] == WHITE)
-                white_num++;
-            else if(match.board[i][j] == BLACK)
-                black_num++;
-        }
-    }
+    black_num = match.get_current_num(BLACK);
+    white_num = match.get_current_num(WHITE);
 
     cout << "黒のコマ数: " << black_num << endl;
     cout << "白のコマ数: " << white_num << endl;
