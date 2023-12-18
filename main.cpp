@@ -199,6 +199,7 @@ struct INPUT_DATA get_score_max(Board *match)
 
         if(itr == act.begin()) {
             max_score = current_score;
+            max_coord_arr.push_back((*itr));
             cout << "max_score初期値: " << max_score << endl;
             delete try_board;
             continue;
@@ -223,7 +224,11 @@ struct INPUT_DATA get_score_max(Board *match)
 
     }
 
+    cout << "max_coord_arr size:" << max_coord_arr.size() << endl;
+    
     int rand_num = rand()%max_coord_arr.size();
+
+    cout << "rand_num:" << rand_num << endl;
 
     cout << "最大のスコアを得られるのは(" << max_coord_arr[rand_num].x << ", " << max_coord_arr[rand_num].y << ")" << endl;
 
