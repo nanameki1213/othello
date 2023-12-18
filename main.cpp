@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Board.hpp"
 #include "GameTree.hpp"
+#include "ev_function.hpp"
 #include <termios.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -27,17 +28,6 @@ int score[N][N] = {
     {2,5,1,15,20,20,15,1,5,2},
     {2,1000,5,100,10,10,100,5,1000,2},
     {2,2,2,2,2,2,2,2,2,2}
-};
-
-int corner[N - 2][N - 2] = {
-    {10,-5,1,0,0,1,-5,10},
-    {-5,-5,0,0,0,0,-5,-5},
-    {1,0,1,0,0,1,0,1},
-    {0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0},
-    {1,0,1,0,0,1,0,1},
-    {-5,-5,0,0,0,0,-5,-5},
-    {10,-5,1,0,0,1,-5,10},
 };
 
 int getch(void)
@@ -149,6 +139,7 @@ struct INPUT_DATA get_max(Board *match)
             max_num = try_num;
             max_coord_arr.push_back((*itr));
             cout << "max_num初期値: " << max_num << endl;
+            delete try_board;
             continue;
         }
         cout << "現在のmax_numは" << max_num << endl; 
@@ -182,7 +173,6 @@ struct INPUT_DATA get_score_max(Board *match)
 {
     vector<struct INPUT_DATA> act;
     match->get_legal_act(act);
-    int current_num = match->get_current_num(match->k);
 
     cout << "合法手\n";
     for(auto itr = act.begin(); itr != act.end(); itr++) {
@@ -190,39 +180,52 @@ struct INPUT_DATA get_score_max(Board *match)
     }
 
     vector<struct INPUT_DATA> max_coord_arr;
-    int max_num;
+    int max_score;
 
-    for(auto itr = act.begin(); itr != act.end(); itr++) {
+    for (auto itr = act.begin(); itr != act.end(); itr++) {
+        cout << "座標" << "(" << (*itr).x << ", " << (*itr).y << ")" << "を試します．\n";
+        
+        Board *try_board = new Board(*match);
+        try_board->change_board((*itr).x, (*itr).y);
+
+        int current_score = 0;
+        for(int i = 1; i < N - 1; i++) {
+            for(int j = 1; j < N - 1; j++) {
+                if(try_board->board[i][j] == match->k) {
+                    current_score += score[i][j];
+                }
+            }
+        }
+
         if(itr == act.begin()) {
-            max_num = score[(*itr).y][(*itr).x];
-            cout << "max_num初期値: " << max_num << endl;
+            max_score = current_score;
+            cout << "max_score初期値: " << max_score << endl;
+            delete try_board;
             continue;
         }
-
-        int try_num = score[(*itr).y][(*itr).x];
-
-        cout << "現在のmax_numは" << max_num << endl; 
-        // 最大値と一致した場合は配列に追加
-        if(try_num == max_num) {
-            cout << "重複" << endl;
-            max_coord_arr.push_back((*itr));
-        }
         
-        if(try_num > max_num) {
-            cout << "max_num更新:" << try_num << endl;
-            max_num = try_num;
+        cout << "現在のmax_scoreは" << max_score << endl;
+
+        if(current_score > max_score) {
+            max_score = current_score;
+            cout << "max_score更新:" << max_score << endl;
             if(!max_coord_arr.empty()) {
                 cout << "max_coord_arr初期化\n";
                 max_coord_arr.clear();
                 max_coord_arr.push_back((*itr));
             }
+        } else if(current_score == max_score) {
+            cout << "重複" << endl;
+            max_coord_arr.push_back((*itr));
         }
+
+        delete try_board;
 
     }
 
     int rand_num = rand()%max_coord_arr.size();
 
-    cout << "最大のコマ数を得られるのは(" << max_coord_arr[rand_num].x << ", " << max_coord_arr[rand_num].y << ")" << endl;
+    cout << "最大のスコアを得られるのは(" << max_coord_arr[rand_num].x << ", " << max_coord_arr[rand_num].y << ")" << endl;
 
     return max_coord_arr[rand_num];
 }
@@ -296,70 +299,6 @@ unsigned char edit_vs(unsigned char flag)
     } while(is_decide == false);
 
     return flag;
-}
-
-int ev_score(Board *board, int my_k)
-{
-    int ev_num = board->get_current_num(my_k);
-
-    return ev_num;
-}
-
-int ev_legal_act(Board *board, int my_k)
-{
-    Board *opp = new Board(*board);
-
-    vector<struct INPUT_DATA> my_act;
-    vector<struct INPUT_DATA> opp_act;
-
-    board->get_legal_act(my_act);
-    opp->get_legal_act(opp_act);
-
-    int can_put_diff = (board->k);
-}
-
-int ev_best(Board *board, int my_k)
-{
-    Board *opp = new Board(*board);
-
-    vector<INPUT_DATA> my_act;
-    vector<INPUT_DATA> opp_act;
-    board->get_legal_act(my_act);
-    opp->get_legal_act(opp_act);
-
-    int can_put_diff;
-    if(board->k == my_k)
-        can_put_diff = my_act.size() - opp_act.size();
-    else 
-        can_put_diff = opp_act.size() - my_act.size();
-
-    int k = 0.5; // 係数
-
-    // 角の形の良さの比較
-    int my_corner = 0;
-    int opp_corner = 0;
-    for(int i = 1; i < N - 1; i++) {
-        for(int j = 1; j < N - 1; j++) {
-            if(board->board[i][j] == board->k) {
-                my_corner += corner[i][j];
-            }
-            if(opp->board[i][j] == opp->k) {
-                my_corner += corner[i][j];
-            }
-        }
-    }
-    if(board->k != my_k) {
-        int tmp = my_corner;
-        my_corner = opp_corner;
-        opp_corner = tmp;
-    }
-
-    int corner_score = my_corner - opp_corner;
-
-    int ev_num = can_put_diff + corner_score * k;
-    
-
-    return ev_num;
 }
 
 int main(void)
