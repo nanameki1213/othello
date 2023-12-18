@@ -129,7 +129,6 @@ struct INPUT_DATA get_max(Board *match)
 {
     vector<struct INPUT_DATA> act;
     match->get_legal_act(act);
-    int black,white;
     int current_num = match->get_current_num(match->k);
 
     cout << "合法手\n";
@@ -183,17 +182,49 @@ struct INPUT_DATA get_score_max(Board *match)
 {
     vector<struct INPUT_DATA> act;
     match->get_legal_act(act);
-    
-    int max = score[act[0].y][act[0].x];
-    struct INPUT_DATA max_coord = act[0];
-    for(auto itr = act.begin() + 1; itr != act.end(); itr++) {
-        if(score[(*itr).y][(*itr).x] > max) {
-            max = score[(*itr).y][(*itr).x];
-            max_coord = *itr;
-        }
+    int current_num = match->get_current_num(match->k);
+
+    cout << "合法手\n";
+    for(auto itr = act.begin(); itr != act.end(); itr++) {
+        cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
     }
 
-    return max_coord;
+    vector<struct INPUT_DATA> max_coord_arr;
+    int max_num;
+
+    for(auto itr = act.begin(); itr != act.end(); itr++) {
+        if(itr == act.begin()) {
+            max_num = score[(*itr).y][(*itr).x];
+            cout << "max_num初期値: " << max_num << endl;
+            continue;
+        }
+
+        int try_num = score[(*itr).y][(*itr).x];
+
+        cout << "現在のmax_numは" << max_num << endl; 
+        // 最大値と一致した場合は配列に追加
+        if(try_num == max_num) {
+            cout << "重複" << endl;
+            max_coord_arr.push_back((*itr));
+        }
+        
+        if(try_num > max_num) {
+            cout << "max_num更新:" << try_num << endl;
+            max_num = try_num;
+            if(!max_coord_arr.empty()) {
+                cout << "max_coord_arr初期化\n";
+                max_coord_arr.clear();
+                max_coord_arr.push_back((*itr));
+            }
+        }
+
+    }
+
+    int rand_num = rand()%max_coord_arr.size();
+
+    cout << "最大のコマ数を得られるのは(" << max_coord_arr[rand_num].x << ", " << max_coord_arr[rand_num].y << ")" << endl;
+
+    return max_coord_arr[rand_num];
 }
 
 void print_vs(unsigned char flag, bool is_first_cur)
@@ -428,7 +459,11 @@ int main(void)
                 // cout << "ランダムで生成した数:" << act_num << endl;
 
                 // 最大値を得るアルゴリズム
-                struct INPUT_DATA max = get_max(&match);
+                // struct INPUT_DATA max = get_max(&match);
+                // match.change_board(max.x, max.y);
+
+                // 実験課題4
+                struct INPUT_DATA max = get_score_max(&match);
                 match.change_board(max.x, max.y);
 
                 // ミニマックス法
