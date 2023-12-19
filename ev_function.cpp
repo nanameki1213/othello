@@ -25,6 +25,7 @@ int ev_score(Board *board, int my_k)
 int ev_legal_act(Board *board, int my_k)
 {
     Board *opp = new Board(*board);
+    opp->k = board->k * -1;
 
     vector<struct INPUT_DATA> my_act;
     vector<struct INPUT_DATA> opp_act;
@@ -32,7 +33,9 @@ int ev_legal_act(Board *board, int my_k)
     board->get_legal_act(my_act);
     opp->get_legal_act(opp_act);
 
-    int can_put_diff = (board->k);
+    int can_put_diff = (board->k == my_k) ? (my_act.size() - opp_act.size()) : (opp_act.size() - my_act.size());
+
+    return can_put_diff;
 }
 
 int ev_best(Board *board, int my_k)

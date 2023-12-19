@@ -145,10 +145,6 @@ void Board::change_board(int x, int y)
 {
     board[y][x] = k;
 
-    int mx, my;
-
-    int opp = k * -1;
-
     for(int i = 0; i < N -2; i++) {
         change_in_row(x, y, i);
     }

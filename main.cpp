@@ -119,7 +119,6 @@ struct INPUT_DATA get_max(Board *match)
 {
     vector<struct INPUT_DATA> act;
     match->get_legal_act(act);
-    int current_num = match->get_current_num(match->k);
 
     cout << "合法手\n";
     for(auto itr = act.begin(); itr != act.end(); itr++) {
@@ -127,7 +126,7 @@ struct INPUT_DATA get_max(Board *match)
     }
 
     vector<struct INPUT_DATA> max_coord_arr;
-    int max_num;
+    int max_num = 0;
 
     for(auto itr = act.begin(); itr != act.end(); itr++) {
         cout << "座標" << "(" << (*itr).x << ", " << (*itr).y << ")" << "を試します．\n";
@@ -180,7 +179,7 @@ struct INPUT_DATA get_score_max(Board *match)
     }
 
     vector<struct INPUT_DATA> max_coord_arr;
-    int max_score;
+    int max_score = 0;
 
     for (auto itr = act.begin(); itr != act.end(); itr++) {
         cout << "座標" << "(" << (*itr).x << ", " << (*itr).y << ")" << "を試します．\n";
@@ -407,51 +406,51 @@ int main(void)
                 // match.change_board(max.x, max.y);
 
                 // 実験課題4
-                struct INPUT_DATA max = get_score_max(&match);
-                match.change_board(max.x, max.y);
+                // struct INPUT_DATA max = get_score_max(&match);
+                // match.change_board(max.x, max.y);
 
                 // ミニマックス法
-                // Game_Node *node = new Game_Node(algorithm_k);
-                // node->current_board = &match;
+                Game_Node *node = new Game_Node(algorithm_k);
+                node->current_board = &match;
 
-                // vector<INPUT_DATA> act;
-                // match.get_legal_act(act);
+                vector<INPUT_DATA> act;
+                match.get_legal_act(act);
 
-                // for(auto itr = act.begin(); itr != act.end(); itr++) {
-                //     cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
-                // }
+                for(auto itr = act.begin(); itr != act.end(); itr++) {
+                    cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
+                }
 
-                // node->ev_func = ev_best;
+                node->ev_func = ev_score;
 
-                // // 第二引数に0を入れるとなんの意味もなくなる
-                // expandChildren_by_num(node, 2);
+                // 第二引数に0を入れるとなんの意味もなくなる
+                expandChildren_by_num(node, 8);
 
                 // printTree(node);
 
-                // int max_ev_num;
-                // INPUT_DATA best_act;
-                // if(node->children_node.empty()) {
-                //     printf("ゲーム木の深さが0です\n");
-                //     return 1;
-                // }
-                // for(auto itr = node->children_node.begin(); itr != node->children_node.end(); itr++) {
-                //     if(itr == node->children_node.begin()) {
-                //         max_ev_num = (*itr)->evaluete_num;
-                //         best_act = (*itr)->pre_act;
-                //         continue;
-                //     }
-                //     if((*itr)->evaluete_num > max_ev_num) {
-                //         max_ev_num = (*itr)->evaluete_num;
-                //         best_act = (*itr)->pre_act;
-                //     }
-                // }
-                // cout << "評価値:" << max_ev_num << endl;
-                // cout << "(" << best_act.x << ", " << best_act.y << ")" << endl;
-                // match.change_board(best_act.x, best_act.y);
+                int max_ev_num = 0;
+                INPUT_DATA best_act = {0};
+                if(node->children_node.empty()) {
+                    printf("ゲーム木の深さが0です\n");
+                    return 1;
+                }
+                for(auto itr = node->children_node.begin(); itr != node->children_node.end(); itr++) {
+                    if(itr == node->children_node.begin()) {
+                        max_ev_num = (*itr)->evaluete_num;
+                        best_act = (*itr)->pre_act;
+                        continue;
+                    }
+                    if((*itr)->evaluete_num > max_ev_num) {
+                        max_ev_num = (*itr)->evaluete_num;
+                        best_act = (*itr)->pre_act;
+                    }
+                }
+                cout << "評価値:" << max_ev_num << endl;
+                cout << "(" << best_act.x << ", " << best_act.y << ")" << endl;
+                match.change_board(best_act.x, best_act.y);
 
-                // delete node;
+                delete node;
                 
-                // getchar();
+                getchar();
                 
             } else {
                 int key = input_key(&match, input_data);
