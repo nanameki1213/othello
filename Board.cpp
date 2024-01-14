@@ -55,7 +55,7 @@ Board::Board(const Board &b)
 void Board::print_board()
 {
     cout << "turn: " << turn << endl;
-    printf("\n現在のターンは%sです\n\n", k == BLACK ? "〇" : "●");
+    printf("\n現在のターンは%sです\n\n", k == BLACK ? BLACK_STR : WHITE_STR);
 
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
@@ -69,13 +69,13 @@ void Board::print_board()
 
             switch(board[i][j]) {
                 case NONE:
-                    cout << "--"; break;
+                    cout << NONE_STR; break;
                 case WHITE:
-                    cout << "●"; break;
+                    cout << WHITE_STR; break;
                 case BLACK:
-                    cout << "〇"; break;
+                    cout << BLACK_STR; break;
                 case OUT_OF_RANGE:
-                    cout << "■";
+                    cout << WALL_STR;
                     break;
                 default:
                     ;

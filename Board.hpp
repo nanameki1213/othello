@@ -2,11 +2,17 @@
 
 #include <iostream>
 #include <vector>
+
 #define N 10
 #define NONE 0
 #define WHITE 1
 #define BLACK -1
 #define OUT_OF_RANGE 2
+
+#define WHITE_STR "乙"
+#define BLACK_STR "甲"
+#define WALL_STR "壁"
+#define NONE_STR "--"
 
 struct INPUT_DATA {
     int x, y;

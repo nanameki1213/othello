@@ -423,7 +423,7 @@ int main(void)
                 node->ev_func = ev_score;
 
                 // 第二引数に0を入れるとなんの意味もなくなる
-                expandChildren_by_num(node, 8);
+                expandChildren_by_num(node, 5);
 
                 // printTree(node);
 
@@ -450,7 +450,8 @@ int main(void)
 
                 delete node;
                 
-                getchar();
+                // cout << "press enter to continue\n";
+                // getchar();
                 
             } else {
                 int key = input_key(&match, input_data);
