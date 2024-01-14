@@ -4,15 +4,17 @@
 
 using namespace std;
 
-int corner[N - 2][N - 2] = {
-    {10,-5, 5, 0, 0, 5,-5,10},
-    {-5,-5, 0, 0, 0, 0,-5,-5},
-    { 5, 0, 5, 0, 0, 5, 0, 5},
-    { 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0},
-    { 5, 0, 5, 0, 0, 5, 0, 5},
-    {-5,-5, 0, 0, 0, 0,-5,-5},
-    {10,-5, 5, 0, 0, 5,-5,10},
+int corner[N][N] = {
+    { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+    { 2,10,-5, 5, 0, 0, 5,-5,10, 2},
+    { 2,-5,-5, 0, 0, 0, 0,-5,-5, 2},
+    { 2, 5, 0, 5, 0, 0, 5, 0, 5, 2},
+    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+    { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+    { 2, 5, 0, 5, 0, 0, 5, 0, 5, 2},
+    { 2,-5,-5, 0, 0, 0, 0,-5,-5, 2},
+    { 2,10,-5, 5, 0, 0, 5,-5,10, 2},
+    { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 };
 
 int ev_score(Board *board, int my_k)
@@ -67,7 +69,7 @@ int ev_best(Board *board, int my_k)
 
     int ev_num = corner_score  + score_diff;
     
-    cout << "corner_score:" << corner_score << " + " << "score_diff:" << score_diff << " = " << ev_num << endl;
+    cout << "corner_score:" << "(" << my_corner << "-" << opp_corner << "=" << corner_score << ")" << " + " << "score_diff:" << score_diff << " = " << ev_num << endl;
 
     return ev_num;
 }

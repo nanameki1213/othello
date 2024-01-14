@@ -450,8 +450,8 @@ int main(void)
 
                 delete_tree(node);
                 
-                cout << "press enter to continue\n";
-                getchar();
+                // cout << "press enter to continue\n";
+                // getchar();
                 
             } else {
                 int key = input_key(&match, input_data);
