@@ -420,7 +420,7 @@ int main(void)
                 //     cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
                 // }
 
-                node->ev_func = ev_score;
+                node->ev_func = ev_best;
 
                 // 第二引数に0を入れるとなんの意味もなくなる
                 expandChildren_by_num(node, 2);
@@ -448,7 +448,7 @@ int main(void)
                 cout << "(" << best_act.x << ", " << best_act.y << ")" << endl;
                 match.change_board(best_act.x, best_act.y);
 
-                delete node;
+                delete_tree(node);
                 
                 cout << "press enter to continue\n";
                 getchar();

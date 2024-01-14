@@ -9,8 +9,8 @@
 #define BLACK -1
 #define OUT_OF_RANGE 2
 
-#define WHITE_STR "乙"
-#define BLACK_STR "甲"
+#define WHITE_STR "白"
+#define BLACK_STR "黒"
 #define WALL_STR "壁"
 #define NONE_STR "--"
 

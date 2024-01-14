@@ -55,17 +55,6 @@ void Game_Node::expandChildren()
     }
 }
 
-void Game_Node::deleteChildren()
-{
-    // 既にchildren_nodeがいない場合
-    if(children_node.empty())
-        return;
-
-    for(auto itr = children_node.begin(); itr != children_node.end(); itr++) {
-        delete *itr;
-    }
-}
-
 // ゲーム木の深さをnにし，ミニマックス法で最善手を得る
 void expandChildren_by_num(Game_Node *node, int n)
 {
@@ -108,6 +97,17 @@ void expandChildren_by_num(Game_Node *node, int n)
     } else {
         node->evaluete_num = min_ev_num;
     }
+}
+
+void delete_tree(Game_Node *root)
+{
+	if(root->children_node.empty()) {
+		return;
+	}
+	for(auto itr = root->children_node.begin(); itr != root->children_node.end(); itr++) {
+		delete_tree(*itr);
+		delete *itr;
+	}
 }
 
 void printTree(Game_Node *root, int n, int depth)
