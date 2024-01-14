@@ -93,8 +93,8 @@ int input_key(Board *match, struct INPUT_DATA &data)
 
             system("clear"); // windows環境ならsystem("cls");
             vector<struct INPUT_DATA> act;
-            match->get_legal_act(act);
-            cout << "legal act num:" << act.size() << endl;
+            // match->get_legal_act(act);
+            // cout << "legal act num:" << act.size() << endl;
             match->print_board();
             cout << "\nw,a,s,dでカーソルを移動\n待った!:b\n終了:x\n";
 
@@ -372,7 +372,7 @@ int main(void)
     // for(int i = 0; i < 100; i++) {
     while (!match.check_finish()) {
     // while (1) {
-        // system("clear");
+        system("clear");
 
         // boardに変更を加える前にログをとる
         if(is_wait) { // 待った!されたらログを書き換える
@@ -416,16 +416,16 @@ int main(void)
                 vector<INPUT_DATA> act;
                 match.get_legal_act(act);
 
-                for(auto itr = act.begin(); itr != act.end(); itr++) {
-                    cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
-                }
+                // for(auto itr = act.begin(); itr != act.end(); itr++) {
+                //     cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
+                // }
 
                 node->ev_func = ev_score;
 
                 // 第二引数に0を入れるとなんの意味もなくなる
-                expandChildren_by_num(node, 5);
+                expandChildren_by_num(node, 2);
 
-                // printTree(node);
+                printTree(node);
 
                 int max_ev_num = 0;
                 INPUT_DATA best_act = {0};
@@ -450,8 +450,8 @@ int main(void)
 
                 delete node;
                 
-                // cout << "press enter to continue\n";
-                // getchar();
+                cout << "press enter to continue\n";
+                getchar();
                 
             } else {
                 int key = input_key(&match, input_data);
@@ -498,8 +498,8 @@ int main(void)
     black_num = match.get_current_num(BLACK);
     white_num = match.get_current_num(WHITE);
 
-    cout << "黒のコマ数: " << black_num << endl;
-    cout << "白のコマ数: " << white_num << endl;
+    cout << BLACK_STR << "のコマ数: " << black_num << endl;
+    cout << WHITE_STR <<  "のコマ数: " << white_num << endl;
 
     // // 最終盤面のログをとる
     // log.push_back(match);

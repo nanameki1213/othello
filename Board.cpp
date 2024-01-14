@@ -66,7 +66,6 @@ void Board::print_board()
                 cout << "\x1b[48;5;242m";
             }
 
-
             switch(board[i][j]) {
                 case NONE:
                     cout << NONE_STR; break;
@@ -87,6 +86,8 @@ void Board::print_board()
     }
 
     cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
+    cout << "\n" << BLACK_STR << "のコマ数: " << get_current_num(BLACK) << endl;
+    cout << WHITE_STR << "のコマ数: " << get_current_num(WHITE) << endl;
 }
 
 int Board::get_current_num(int target_k)

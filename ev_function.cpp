@@ -41,6 +41,7 @@ int ev_legal_act(Board *board, int my_k)
 int ev_best(Board *board, int my_k)
 {
     Board *opp = new Board(*board);
+    opp->k *= -1;
 
     vector<INPUT_DATA> my_act;
     vector<INPUT_DATA> opp_act;
