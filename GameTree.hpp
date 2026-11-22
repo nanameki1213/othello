@@ -22,11 +22,11 @@ public:
     Game_Node *parent_node;
 
     void expandChildren();
-    void deleteChildren();
 
     evaluete_function ev_func;
 
 };
 
 void expandChildren_by_num(Game_Node *node, int n);
+void delete_tree(Game_Node *root);
 void printTree(Game_Node *node, int n = -1, int depth = -1);

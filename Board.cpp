@@ -55,7 +55,7 @@ Board::Board(const Board &b)
 void Board::print_board()
 {
     cout << "turn: " << turn << endl;
-    printf("\n現在のターンは%sです\n\n", k == BLACK ? "〇" : "●");
+    printf("\n現在のターンは%sです\n\n", k == BLACK ? BLACK_STR : WHITE_STR);
 
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
@@ -66,16 +66,15 @@ void Board::print_board()
                 cout << "\x1b[48;5;242m";
             }
 
-
             switch(board[i][j]) {
                 case NONE:
-                    cout << "--"; break;
+                    cout << NONE_STR; break;
                 case WHITE:
-                    cout << "●"; break;
+                    cout << WHITE_STR; break;
                 case BLACK:
-                    cout << "〇"; break;
+                    cout << BLACK_STR; break;
                 case OUT_OF_RANGE:
-                    cout << "■";
+                    cout << WALL_STR;
                     break;
                 default:
                     ;
@@ -87,14 +86,16 @@ void Board::print_board()
     }
 
     cout << "\nCursor:(" << cur.x << "," << cur.y << ")\n";
+    cout << "\n" << BLACK_STR << "のコマ数: " << get_current_num(BLACK) << endl;
+    cout << WHITE_STR << "のコマ数: " << get_current_num(WHITE) << endl;
 }
 
-int Board::get_current_num()
+int Board::get_current_num(int target_k)
 {
     int num = 0;
     for(int i = 1; i < N - 1; i++) {
         for(int j = 1; j < N - 1; j++) {
-            if(board[i][j] == k)
+            if(board[i][j] == target_k)
                 num++;
         }
     }
@@ -144,10 +145,6 @@ bool Board::check_pass()
 void Board::change_board(int x, int y)
 {
     board[y][x] = k;
-
-    int mx, my;
-
-    int opp = k * -1;
 
     for(int i = 0; i < N -2; i++) {
         change_in_row(x, y, i);

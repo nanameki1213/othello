@@ -26,8 +26,8 @@ void Game_Node::expandChildren()
 
     current_board->get_legal_act(act);
     // for(auto itr = act.begin(); itr != act.end(); itr++) {
-    //     cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
-    // }
+    //      cout << "(" << (*itr).x << ", " << (*itr).y << ")" << endl;
+	// }
     // current_board->print_board();
 
     // 合法手の数だけノードを増やす
@@ -35,37 +35,31 @@ void Game_Node::expandChildren()
         Board *try_board = new Board(*current_board);
         Game_Node *child = new Game_Node(*this);
 
-        try_board->k = current_board->k * -1;
+        try_board->k = current_board->k;
 
         // 行動の軌跡を残す
         child->pre_act = *itr;
 
         // curren_boardの設定
         try_board->change_board((*itr).x, (*itr).y);
+		// 打ち手を交代
+		try_board->k *= -1;
         child->current_board = try_board;
         // 親の設定
         child->parent_node = this;
 
         children_node.push_back(child);
+
+		// cout << "expandChildren\n";
+		// child->current_board->print_board();
     }
 }
 
-void Game_Node::deleteChildren()
-{
-    // 既にchildren_nodeがいない場合
-    if(children_node.empty())
-        return;
-
-    for(auto itr = children_node.begin(); itr != children_node.end(); itr++) {
-        delete *itr;
-    }
-}
-
-// ゲーム木の深さをnにし，アルファベータ法で最善手を得る
+// ゲーム木の深さをnにし，ミニマックス法で最善手を得る
 void expandChildren_by_num(Game_Node *node, int n)
 {
     // cout << "called expandbynum\n";
-    if(n == 1) {
+    if(n == 0) {
         node->evaluete_num = node->ev_func(node->current_board, node->my_k);
         // cout << "評価値: " << node->evaluete_num << endl;
         return;
@@ -78,8 +72,8 @@ void expandChildren_by_num(Game_Node *node, int n)
     // }
     // cout << "children_num: " << node->children_node.size() << endl;
 
-    int max_ev_num;
-    int min_ev_num;
+    int max_ev_num = 0;
+    int min_ev_num = 0;
 
     for(auto itr = node->children_node.begin(); itr != node->children_node.end(); itr++) {
         // cout << "n: " << n << endl;
@@ -103,6 +97,17 @@ void expandChildren_by_num(Game_Node *node, int n)
     } else {
         node->evaluete_num = min_ev_num;
     }
+}
+
+void delete_tree(Game_Node *root)
+{
+	if(root->children_node.empty()) {
+		return;
+	}
+	for(auto itr = root->children_node.begin(); itr != root->children_node.end(); itr++) {
+		delete_tree(*itr);
+		delete *itr;
+	}
 }
 
 void printTree(Game_Node *root, int n, int depth)

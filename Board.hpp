@@ -2,11 +2,17 @@
 
 #include <iostream>
 #include <vector>
+
 #define N 10
 #define NONE 0
 #define WHITE 1
 #define BLACK -1
 #define OUT_OF_RANGE 2
+
+#define WHITE_STR "白"
+#define BLACK_STR "黒"
+#define WALL_STR "壁"
+#define NONE_STR "--"
 
 struct INPUT_DATA {
     int x, y;
@@ -42,5 +48,5 @@ public:
     void change_board(int x, int y);
 
     void get_legal_act(std::vector<struct INPUT_DATA> &act);
-    int get_current_num();
+    int get_current_num(int target_k);
 };
